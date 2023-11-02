@@ -1,9 +1,6 @@
 package com.example.backend;
 
-import com.example.backend.models.Employee;
-import com.example.backend.models.Patient;
-import com.example.backend.models.User;
-import com.example.backend.services.IUserService;
+import com.example.backend.service.UserService;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -12,10 +9,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class BackendApplication {
 
-	private final IUserService userService;
+	private final UserService userService;
 
 	@Autowired
-	public BackendApplication(IUserService userService) {
+	public BackendApplication(UserService userService) {
 		this.userService = userService;
 	}
 
@@ -25,9 +22,9 @@ public class BackendApplication {
 
 	@PostConstruct
 	public void postConstruct() {
-		userService.createUser(new Patient("Yaman", "A", "yaman", "112233"));
-		userService.createUser(new Employee("Noor", "H", "noor", "112233", Employee.Position.OTHER));
-		userService.createUser(new Employee("Doctor", "d", "doctor", "112233", Employee.Position.DOCTOR));
+		//userService.createUser(new Patient("Yaman", "A", "yaman", "112233"));
+		//userService.createUser(new Employee("Noor", "H", "noor", "112233", Employee.Position.OTHER));
+		//userService.createUser(new Employee("Doctor", "d", "doctor", "112233", Employee.Position.DOCTOR));
 	}
 
 }

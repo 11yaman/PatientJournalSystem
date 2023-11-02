@@ -1,4 +1,4 @@
-package com.example.backend.models;
+package com.example.backend.model;
 
 import jakarta.persistence.*;
 import java.util.List;

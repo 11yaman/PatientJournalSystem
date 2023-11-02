@@ -1,6 +1,6 @@
-package com.example.backend.config;
+package com.example.backend.security;
 
-import com.example.backend.models.User;
+import com.example.backend.model.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,12 +9,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class UserInfoDetails implements UserDetails {
+public class CustomUserDetails implements UserDetails {
     private String username;
     private String password;
     private List<GrantedAuthority> roles;
 
-    public UserInfoDetails(User user) {
+    public CustomUserDetails(User user) {
         this.username = user.getUsername();
         this.password = user.getPassword();
         this.roles = new ArrayList<>();

@@ -1,9 +1,9 @@
-package com.example.backend.models;
+package com.example.backend.model;
 
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
-
+//TODO: prel
 @Entity
 public class Note {
     @Id

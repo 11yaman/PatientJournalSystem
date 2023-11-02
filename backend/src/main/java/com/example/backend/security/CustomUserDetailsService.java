@@ -1,23 +1,23 @@
-package com.example.backend.config;
+package com.example.backend.security;
 
-import com.example.backend.models.User;
-import com.example.backend.services.IUserService;
+import com.example.backend.model.User;
+import com.example.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-public class UserInfoDetailsService implements UserDetailsService {
-
-    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
+@Configuration
+public class CustomUserDetailsService implements UserDetailsService {
     @Autowired
-    private IUserService userService;
+    private UserService userService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userService.findByUsername(username);
         if (user == null)
             throw new UsernameNotFoundException("Username not found");
-        return new UserInfoDetails(user);
+        return new CustomUserDetails(user);
     }
 }
