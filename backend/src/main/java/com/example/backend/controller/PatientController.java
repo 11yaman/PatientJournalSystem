@@ -29,7 +29,7 @@ public class PatientController {
         this.strategyMapper = strategyMapper;
     }
 
-    @GetMapping("/profile")
+    @GetMapping("/info")
     public PatientDto getPatientInfo(Authentication authentication) {
         try {
             return strategyMapper.map(patientService.getPatientByUsername(authentication.getName()));

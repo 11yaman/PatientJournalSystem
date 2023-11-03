@@ -1,7 +1,6 @@
 package com.example.backend.controller;
 
 import com.example.backend.dto.AuthenticateRequest;
-import com.example.backend.dto.PatientDto;
 import com.example.backend.dto.RegisterRequest;
 import com.example.backend.dto.UserDto;
 import com.example.backend.exception.DuplicatedUserInfoException;
@@ -16,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestController
+@RequestMapping("/auth")
 public class AuthController {
     private final AuthService authService;
     @Autowired
@@ -40,24 +40,19 @@ public class AuthController {
     }
 
     @PostMapping("/register-patient")
-    public ResponseEntity<PatientDto> registerPatient(@RequestBody RegisterRequest registerRequest) {
+    public ResponseEntity<UserDto> registerPatient(@RequestBody RegisterRequest registerRequest) {
         try {
-            Patient patient = authService.registerPatient(new Patient(
+            User user = authService.register(new Patient(
                     registerRequest.username(), registerRequest.password(), registerRequest.firstName(), registerRequest.lastName()));
-            return new ResponseEntity<>(mapToPatientDto(patient), HttpStatus.CREATED);
+            return new ResponseEntity<>(mapToUserDto(user), HttpStatus.CREATED);
         } catch (DuplicatedUserInfoException e) {
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_ACCEPTABLE, String.format("Username %s already been used", registerRequest.username()));
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, String.format("Username %s already been used", registerRequest.username()));
         } catch (UserNotFoundException e) {
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, "User not found");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
         }
     }
 
     private UserDto mapToUserDto(User user) {
-        return new UserDto(user.getUsername(), user.getFirstName(), user.getLastName());
-    }
-    private PatientDto mapToPatientDto(Patient patient) {
-        return new PatientDto(patient.getUsername(), patient.getFirstName(), patient.getLastName());
+        return new UserDto(user.getId(), user.getUsername(), user.getFirstName(), user.getLastName());
     }
 }

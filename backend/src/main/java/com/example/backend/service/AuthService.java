@@ -13,6 +13,5 @@ import org.springframework.web.bind.annotation.RequestBody;
 public interface AuthService {
     User authenticate(String username, String password);
     void logout();
-    Patient registerPatient(Patient patientToCreate);
-    Employee registerEmployee(Employee employeeToCreate);
+    User register(User userToRegister);
 }

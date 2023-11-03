@@ -15,16 +15,16 @@ public abstract class User {
     private String password;
     private Role role;
 
-    public User(String username, String firstName, String lastName, Role role) {
+    public enum Role {EMPLOYEE, PATIENT}
+
+    public User() {
+    }
+    public User(Long id, String username, String firstName, String lastName, Role role) {
+        this.id = id;
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
         this.role = role;
-    }
-
-    public enum Role {EMPLOYEE, PATIENT}
-
-    public User() {
     }
 
     public User(String username, String password, String firstName, String lastName, Role role) {

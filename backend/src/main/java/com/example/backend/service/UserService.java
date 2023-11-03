@@ -5,5 +5,5 @@ import com.example.backend.model.User;
 public interface UserService {
     User findByUsername(String username);
 
-    User createNewUser(User user);
+    User createUser(User user);
 }

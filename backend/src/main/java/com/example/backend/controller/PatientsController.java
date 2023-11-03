@@ -35,13 +35,11 @@ public class PatientsController {
     }
 
     @GetMapping("/{patientId}")
-    public PatientDto getPatientInfo(@PathVariable Long patientId) {
+    public PatientDto getPatientInfoById(@PathVariable Long patientId) {
         try {
             return strategyMapper.map(patientService.getPatientById(patientId));
         } catch (UserNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
     }
-
-
 }
