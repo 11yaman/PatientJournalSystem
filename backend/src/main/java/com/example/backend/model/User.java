@@ -14,16 +14,24 @@ public abstract class User {
     private String username;
     private String password;
     private Role role;
+
+    public User(String username, String firstName, String lastName, Role role) {
+        this.username = username;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.role = role;
+    }
+
     public enum Role {EMPLOYEE, PATIENT}
 
     public User() {
     }
 
-    public User(String firstName, String lastName, String username, String password, Role role) {
-        this.firstName = firstName;
-        this.lastName = lastName;
+    public User(String username, String password, String firstName, String lastName, Role role) {
         this.username = username;
         this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.role = role;
     }
 

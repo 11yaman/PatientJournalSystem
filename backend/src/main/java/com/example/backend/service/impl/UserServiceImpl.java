@@ -1,5 +1,6 @@
 package com.example.backend.service.impl;
 
+import com.example.backend.exception.DuplicatedUserInfoException;
 import com.example.backend.model.User;
 import com.example.backend.repository.UserRepository;
 import com.example.backend.service.UserService;
@@ -24,7 +25,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User createUser(User user) {
+    public User createNewUser(User user) {
+        if (userRepository.findByUsername(user.getUsername()) != null)
+            throw new DuplicatedUserInfoException();
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }

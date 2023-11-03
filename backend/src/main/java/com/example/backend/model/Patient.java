@@ -11,7 +11,11 @@ public class Patient extends User{
     public Patient() {
     }
 
-    public Patient(String firstName, String lastName, String userName, String password) {
-        super(firstName, lastName, userName, password, Role.PATIENT);
+    public Patient(String username, String firstName, String lastName) {
+        super(username, firstName, lastName, Role.PATIENT);
+    }
+
+    public Patient(String username, String password, String firstName, String lastName) {
+        super(username, password, firstName, lastName, Role.PATIENT);
     }
 }

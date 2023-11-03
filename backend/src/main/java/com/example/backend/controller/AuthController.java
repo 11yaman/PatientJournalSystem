@@ -1,59 +1,63 @@
 package com.example.backend.controller;
 
-import com.example.backend.dto.LoginRequest;
-import com.example.backend.dto.SignUpRequest;
+import com.example.backend.dto.AuthenticateRequest;
+import com.example.backend.dto.PatientDto;
+import com.example.backend.dto.RegisterRequest;
+import com.example.backend.dto.UserDto;
+import com.example.backend.exception.DuplicatedUserInfoException;
+import com.example.backend.exception.UserNotFoundException;
 import com.example.backend.model.Patient;
 import com.example.backend.model.User;
-import com.example.backend.service.UserService;
+import com.example.backend.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestController
-@RequestMapping("/api/auth")
 public class AuthController {
-    private final AuthenticationManager authenticationManager;
-    private final UserService userService;
-
+    private final AuthService authService;
     @Autowired
-    public AuthController(AuthenticationManager authenticationManager, UserService userService) {
-        this.authenticationManager = authenticationManager;
-        this.userService = userService;
+    public AuthController(AuthService authService) {
+        this.authService = authService;
     }
 
-    //TODO: TDOs + mappers
     @PostMapping("/authenticate")
-    public ResponseEntity<? extends User> authenticate(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<UserDto> authenticate(@RequestBody AuthenticateRequest authenticateRequest) {
         try {
-            Authentication authenticationResponse = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(loginRequest.username(), loginRequest.password())
-            );
-            SecurityContextHolder.getContext().setAuthentication(authenticationResponse);
-
-            final User user = userService.findByUsername(loginRequest.username());
-            return new ResponseEntity<>(user, HttpStatus.OK);
-        } catch (AuthenticationException e) {
+            User user = authService.authenticate(authenticateRequest.username(), authenticateRequest.password());
+            return new ResponseEntity<>(mapToUserDto(user), HttpStatus.OK);
+        } catch (UserNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Incorrect user ID or password");
         }
     }
 
-    @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/signup")
-    public ResponseEntity<String> signUpNewPatient(@RequestBody SignUpRequest signUpRequest) {
-        if (userService.findByUsername(signUpRequest.username()) != null)
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout() {
+        authService.logout();
+        return new ResponseEntity<>("Logged out", HttpStatus.OK);
+    }
+
+    @PostMapping("/register-patient")
+    public ResponseEntity<PatientDto> registerPatient(@RequestBody RegisterRequest registerRequest) {
+        try {
+            Patient patient = authService.registerPatient(new Patient(
+                    registerRequest.username(), registerRequest.password(), registerRequest.firstName(), registerRequest.lastName()));
+            return new ResponseEntity<>(mapToPatientDto(patient), HttpStatus.CREATED);
+        } catch (DuplicatedUserInfoException e) {
             throw new ResponseStatusException(
-                    HttpStatus.NOT_ACCEPTABLE, String.format("Username %s already been used", signUpRequest.username()));
+                    HttpStatus.NOT_ACCEPTABLE, String.format("Username %s already been used", registerRequest.username()));
+        } catch (UserNotFoundException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "User not found");
+        }
+    }
 
-        User createdUser = userService.createUser(new Patient(
-                signUpRequest.firstName(), signUpRequest.lastName(), signUpRequest.username(), signUpRequest.password()));
-
-        return new ResponseEntity<>("Created", HttpStatus.OK);
+    private UserDto mapToUserDto(User user) {
+        return new UserDto(user.getUsername(), user.getFirstName(), user.getLastName());
+    }
+    private PatientDto mapToPatientDto(Patient patient) {
+        return new PatientDto(patient.getUsername(), patient.getFirstName(), patient.getLastName());
     }
 }
