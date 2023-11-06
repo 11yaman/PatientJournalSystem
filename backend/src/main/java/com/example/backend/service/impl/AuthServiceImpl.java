@@ -39,7 +39,7 @@ public class AuthServiceImpl implements AuthService {
                     new UsernamePasswordAuthenticationToken(username, password)
             );
             SecurityContextHolder.getContext().setAuthentication(authenticationResponse);
-            return userService.findByUsername(username);
+            return userService.getUserByUsername(username);
         } catch (AuthenticationException e) {
             throw new UserNotFoundException();
         }

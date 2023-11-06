@@ -5,7 +5,6 @@ import com.example.backend.model.Patient;
 import com.example.backend.repository.PatientRepository;
 import com.example.backend.service.PatientService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

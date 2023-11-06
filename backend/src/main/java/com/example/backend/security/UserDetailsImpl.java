@@ -9,16 +9,22 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class CustomUserDetails implements UserDetails {
-    private String username;
-    private String password;
-    private List<GrantedAuthority> roles;
+public class UserDetailsImpl implements UserDetails {
+    private final Long id;
+    private final String username;
+    private final String password;
+    private final List<GrantedAuthority> roles;
 
-    public CustomUserDetails(User user) {
+    public UserDetailsImpl(User user) {
+        this.id = user.getId();
         this.username = user.getUsername();
         this.password = user.getPassword();
         this.roles = new ArrayList<>();
         roles.add(new SimpleGrantedAuthority(String.valueOf(user.getRole())));
+    }
+
+    public Long getId() {
+        return id;
     }
 
     @Override

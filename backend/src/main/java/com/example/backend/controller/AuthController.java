@@ -1,8 +1,8 @@
 package com.example.backend.controller;
 
-import com.example.backend.dto.AuthenticateRequest;
-import com.example.backend.dto.RegisterRequest;
-import com.example.backend.dto.UserDto;
+import com.example.backend.dto.request.AuthenticateRequest;
+import com.example.backend.dto.request.RegisterRequest;
+import com.example.backend.dto.response.UserDto;
 import com.example.backend.exception.DuplicatedUserInfoException;
 import com.example.backend.exception.UserNotFoundException;
 import com.example.backend.model.Patient;
@@ -39,7 +39,7 @@ public class AuthController {
         return new ResponseEntity<>("Logged out", HttpStatus.OK);
     }
 
-    @PostMapping("/register-patient")
+    @PostMapping("/patient/register")
     public ResponseEntity<UserDto> registerPatient(@RequestBody RegisterRequest registerRequest) {
         try {
             User user = authService.register(new Patient(
