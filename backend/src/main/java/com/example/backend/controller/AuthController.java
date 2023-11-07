@@ -48,7 +48,7 @@ public class AuthController {
         return new ResponseEntity<>("Logged out", HttpStatus.OK);
     }
 
-    @PostMapping("/register-patient")
+    @PostMapping("/patient/register")
     public ResponseEntity<UserDto> registerPatient(@RequestBody RegisterRequest registerRequest) {
         try {
             User user = authService.register(new Patient(

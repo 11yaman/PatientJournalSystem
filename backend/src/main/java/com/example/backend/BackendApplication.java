@@ -1,5 +1,8 @@
 package com.example.backend;
 
+import com.example.backend.model.Employee;
+import com.example.backend.model.Patient;
+import com.example.backend.service.AuthService;
 import com.example.backend.service.UserService;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,11 +12,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class BackendApplication {
 
-	private final UserService userService;
+	private final AuthService authService;
 
 	@Autowired
-	public BackendApplication(UserService userService) {
-		this.userService = userService;
+	public BackendApplication(AuthService authService) {
+		this.authService = authService;
 	}
 
 	public static void main(String[] args) {
@@ -22,9 +25,9 @@ public class BackendApplication {
 
 	@PostConstruct
 	public void postConstruct() {
-		//userService.createUser(new Patient("Yaman", "A", "yaman", "112233"));
-		//userService.createUser(new Employee("Noor", "H", "noor", "112233", Employee.Position.OTHER));
-		//userService.createUser(new Employee("Doctor", "d", "doctor", "112233", Employee.Position.DOCTOR));
+		//authService.register(new Patient("yaman", "1234", "Yaman", "A"));
+		//authService.register(new Employee("noor", "1234", "Noor", "H", Employee.Position.OTHER));
+		//authService.register(new Employee("Doctor", "d", "doctor", "1234", Employee.Position.DOCTOR));
 	}
 
 }

@@ -56,6 +56,7 @@ public class MessageController {
     @GetMapping("/{messageId}")
     public ResponseEntity<MessageWithRepliesDto> getMessageWithReplies(@PathVariable Long messageId,
                                                                 Authentication authentication) {
+        //TODO: handle exception
         Message message = messageService.getMessageWithRepliesById(messageId);
 
         if(!isEmployeeOrMessageOwner(authentication, message))
