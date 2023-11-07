@@ -49,4 +49,9 @@ public class AuthServiceImpl implements AuthService {
     public void logout() {
         SecurityContextHolder.clearContext();
     }
+
+    @Override
+    public User getAuthenticatedUser(String username) {
+        return userService.getUserByUsername(username);
+    }
 }

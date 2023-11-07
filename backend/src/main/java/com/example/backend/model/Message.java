@@ -25,9 +25,9 @@ public class Message {
     public Message() {
     }
 
-    public Message(String content, LocalDateTime dateTime, User sender) {
+    public Message(String content, User sender) {
         this.content = content;
-        this.dateTime = dateTime;
+        this.dateTime = LocalDateTime.now();
         this.sender = sender;
         this.status = Status.CURRENT;
         this.replies = new ArrayList<>();

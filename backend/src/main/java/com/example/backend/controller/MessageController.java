@@ -45,7 +45,7 @@ public class MessageController {
         User loggedInUser = userService.getUserByUsername(authentication.getName());
         try {
             Message createdMessage = messageService.createMessage(
-                    new Message(messageRequest.content(), messageRequest.dateTime(), loggedInUser));
+                    new Message(messageRequest.content(), loggedInUser));
             return new ResponseEntity<>(messageMapper.map(createdMessage), HttpStatus.CREATED);
         } catch (Exception e){
             e.printStackTrace();
@@ -63,10 +63,12 @@ public class MessageController {
 
         return ResponseEntity.ok(
                 new MessageWithRepliesDto(message.getId(), message.getContent(), message.getDateTime(),
-                        mapToUserDto(message.getSender()), mapToReplyDtos(message.getReplies())));
+                        mapToUserDto(message.getSender()), message.getStatus(),
+                        mapToReplyDtos(message.getReplies())));
     }
 
     @GetMapping("/current")
+    @PreAuthorize("hasAuthority('EMPLOYEE')")
     public ResponseEntity<List<MessageDto>> getCurrentMessages() {
         try {
             List<Message> currentMessages = messageService.getCurrentMessagesForEmployees();
@@ -90,7 +92,7 @@ public class MessageController {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 
             Message repliedMessage = messageService.replyToMessage(parentMessage,
-                    new Reply(replyRequest.content(), replyRequest.dateTime(), loggedInUser));
+                    new Reply(replyRequest.content(), loggedInUser));
             return new ResponseEntity<>(messageMapper.map(repliedMessage), HttpStatus.CREATED);
         } catch (Exception e){
             throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Message could not be replied");

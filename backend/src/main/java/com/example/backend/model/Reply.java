@@ -1,6 +1,7 @@
 package com.example.backend.model;
 
 import jakarta.persistence.*;
+import org.springframework.cglib.core.Local;
 
 import java.time.LocalDateTime;
 
@@ -17,16 +18,9 @@ public class Reply{
     public Reply() {
     }
 
-    public Reply(String content, LocalDateTime dateTime, User sender) {
+    public Reply(String content, User sender) {
         this.content = content;
-        this.dateTime = dateTime;
-        this.sender = sender;
-    }
-
-    public Reply(Long id, String content, LocalDateTime dateTime, User sender) {
-        this.id = id;
-        this.content = content;
-        this.dateTime = dateTime;
+        this.dateTime = LocalDateTime.now();
         this.sender = sender;
     }
 
