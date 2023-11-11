@@ -25,15 +25,13 @@ public class MessageServiceImpl implements MessageService {
         this.replyRepository = replyRepository;
     }
 
+    @Override
     public Message createMessage(Message message) {
         return messageRepository.save(message);
     }
-    public Message getMessageWithRepliesById(Long messageId) {
-        return messageRepository.findMessageWithRepliesById(messageId)
-                .orElseThrow(() -> new EntityNotFoundException("Message not found"));
-    }
 
-    public Message getMessageById(Long messageId) {
+    @Override
+    public Message getMessageWithRepliesById(Long messageId) {
         return messageRepository.findById(messageId)
                 .orElseThrow(() -> new EntityNotFoundException("Message not found"));
     }
@@ -41,23 +39,18 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public Message replyToMessage(Message parentMessage, Reply reply) {
         parentMessage.getReplies().add(reply);
-        parentMessage.setStatus(Message.Status.CURRENT);
+        parentMessage.setStatus(Message.Status.ACTIVE);
         messageRepository.save(parentMessage);
         return parentMessage;
     }
 
     @Override
-    public List<Message> getAllMessagesByPatient(User user) {
-        return messageRepository.findBySender(user);
-    }
-
-    @Override
-    public List<Message> getAllMessagesByPatientId(Long patientId) {
+    public List<Message> getAllMessagesByPatient(Long patientId) {
         return messageRepository.findBySenderId(patientId);
     }
     @Override
-    public List<Message> getCurrentMessagesForEmployees() {
-        return messageRepository.findByStatus(Message.Status.CURRENT);
+    public List<Message> getActiveMessagesForEmployees() {
+        return messageRepository.findByStatus(Message.Status.ACTIVE);
     }
 
 }

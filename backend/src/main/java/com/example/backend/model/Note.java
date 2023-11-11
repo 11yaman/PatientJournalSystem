@@ -10,6 +10,7 @@ public class Note {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String text;
+    private LocalDateTime dateTimeCreated;
     @ManyToOne
     private Employee employee;
     @ManyToOne
@@ -17,7 +18,6 @@ public class Note {
     @ManyToOne
     @Nullable
     private Encounter encounter;
-    private LocalDateTime dateTimeCreated;
 
     public Note() {
     }

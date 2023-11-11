@@ -9,7 +9,6 @@ import com.example.backend.mapping.StrategyMapper;
 import com.example.backend.model.Message;
 import com.example.backend.model.Reply;
 import com.example.backend.model.User;
-import com.example.backend.security.UserDetailsImpl;
 import com.example.backend.service.MessageService;
 import com.example.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,26 +23,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/messages")
+@RequestMapping("/api/v1")
 public class MessageController {
     private final MessageService messageService;
     private final UserService userService;
     private final StrategyMapper<Message, MessageDto> messageMapper;
+    private final StrategyMapper<User, UserDto> userMapper;
 
     @Autowired
-    public MessageController(MessageService messageService, UserService userService,
-                             StrategyMapper<Message, MessageDto> messageMapper) {
+    public MessageController(MessageService messageService,
+                             UserService userService,
+                             StrategyMapper<Message, MessageDto> messageMapper,
+                             StrategyMapper<User, UserDto> userMapper) {
         this.messageService = messageService;
         this.userService = userService;
         this.messageMapper = messageMapper;
+        this.userMapper = userMapper;
     }
 
-    @PostMapping("/create")
+    @PostMapping("/messages")
     @PreAuthorize("hasAuthority('PATIENT')")
     public ResponseEntity<MessageDto> createMessageByPatient(@RequestBody MessageRequest messageRequest,
                                                              Authentication authentication) {
-        User loggedInUser = userService.getUserByUsername(authentication.getName());
         try {
+            User loggedInUser = userService.getUserByUsername(authentication.getName());
             Message createdMessage = messageService.createMessage(
                     new Message(messageRequest.content(), loggedInUser));
             return new ResponseEntity<>(messageMapper.map(createdMessage), HttpStatus.CREATED);
@@ -53,34 +56,26 @@ public class MessageController {
         }
     }
 
-    @GetMapping("/{messageId}")
+    @GetMapping("/messages/{messageId}")
     public ResponseEntity<MessageWithRepliesDto> getMessageWithReplies(@PathVariable Long messageId,
                                                                 Authentication authentication) {
-        //TODO: handle exception
-        Message message = messageService.getMessageWithRepliesById(messageId);
-
-        if(!isEmployeeOrMessageOwner(authentication, message))
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-
-        return ResponseEntity.ok(
-                new MessageWithRepliesDto(message.getId(), message.getContent(), message.getDateTime(),
-                        mapToUserDto(message.getSender()), message.getStatus(),
-                        mapToReplyDtos(message.getReplies())));
-    }
-
-    @GetMapping("/current")
-    @PreAuthorize("hasAuthority('EMPLOYEE')")
-    public ResponseEntity<List<MessageDto>> getCurrentMessages() {
         try {
-            List<Message> currentMessages = messageService.getCurrentMessagesForEmployees();
-            return ResponseEntity.ok(messageMapper.mapAll(currentMessages));
+            Message message = messageService.getMessageWithRepliesById(messageId);
+
+            if(!userService.isEmployeeOrResourceOwner(authentication, message.getSender().getId()))
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+
+            return ResponseEntity.ok(
+                    new MessageWithRepliesDto(message.getId(), message.getContent(), message.getDateTime(),
+                            userMapper.map(message.getSender()), message.getStatus(),
+                            mapToReplyDtos(message.getReplies())));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 
-    @PostMapping("/{messageId}/reply")
-    public ResponseEntity<MessageDto> replyToMessage(
+    @PostMapping("/messages/{messageId}/reply")
+    public ResponseEntity<MessageWithRepliesDto> replyToMessage(
             @PathVariable Long messageId,
             @RequestBody MessageRequest replyRequest,
             Authentication authentication
@@ -89,27 +84,48 @@ public class MessageController {
             Message parentMessage = messageService.getMessageWithRepliesById(messageId);
             User loggedInUser = userService.getUserByUsername(authentication.getName());
 
-            if(!isEmployeeOrMessageOwner(authentication, parentMessage))
+            if(!userService.isEmployeeOrResourceOwner(authentication, parentMessage.getSender().getId()))
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 
             Message repliedMessage = messageService.replyToMessage(parentMessage,
                     new Reply(replyRequest.content(), loggedInUser));
-            return new ResponseEntity<>(messageMapper.map(repliedMessage), HttpStatus.CREATED);
+            return ResponseEntity.ok(
+                    new MessageWithRepliesDto(repliedMessage.getId(), repliedMessage.getContent(), repliedMessage.getDateTime(),
+                            userMapper.map(repliedMessage.getSender()), repliedMessage.getStatus(),
+                            mapToReplyDtos(repliedMessage.getReplies())));
         } catch (Exception e){
             throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Message could not be replied");
         }
     }
 
-    private boolean isEmployeeOrMessageOwner(Authentication authentication, Message message) {
-        Long userId = ((UserDetailsImpl) authentication.getPrincipal()).getId();
+    @RequestMapping("/patients/{patientId}/messages/list")
+    public ResponseEntity<List<MessageDto>> getPatientMessages(Authentication authentication,
+                                                                @PathVariable Long patientId){
+        if(!userService.isEmployeeOrResourceOwner(authentication, patientId))
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 
-        return authentication.getAuthorities().stream()
-                .anyMatch(auth -> "EMPLOYEE".equals(auth.getAuthority())) ||
-                message.getSender().getId().equals(userId);
+        try {
+            List<Message> userMessages;
+            if (userService.isEmployee(authentication))
+                userMessages = messageService.getAllMessagesByPatient(patientId);
+            else
+                userMessages = messageService.getAllMessagesByPatient(
+                        userService.getAuthenticatedUserId(authentication));
+            return ResponseEntity.ok(messageMapper.mapAll(userMessages));
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found");
+        }
     }
 
-    private UserDto mapToUserDto(User sender) {
-        return new UserDto(sender.getId(), sender.getUsername(), sender.getFirstName(), sender.getLastName());
+    @GetMapping("/messages/active")
+    @PreAuthorize("hasAuthority('EMPLOYEE')")
+    public ResponseEntity<List<MessageDto>> getActiveMessages() {
+        try {
+            List<Message> activeMessages = messageService.getActiveMessagesForEmployees();
+            return ResponseEntity.ok(messageMapper.mapAll(activeMessages));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 
     private List<ReplyDto> mapToReplyDtos(List<Reply> replies) {
@@ -122,4 +138,5 @@ public class MessageController {
         }
         return replyDtos;
     }
+
 }

@@ -16,11 +16,11 @@ public class Message {
     private Status status;
     @ManyToOne
     private User sender;
-    @OneToMany(fetch = FetchType.LAZY ,cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER ,cascade = CascadeType.ALL)
     @JoinColumn(name = "message_id")
     private List<Reply> replies;
 
-    public enum Status {CURRENT,ARCHIVED}
+    public enum Status {ACTIVE,ARCHIVED}
 
     public Message() {
     }
@@ -29,7 +29,7 @@ public class Message {
         this.content = content;
         this.dateTime = LocalDateTime.now();
         this.sender = sender;
-        this.status = Status.CURRENT;
+        this.status = Status.ACTIVE;
         this.replies = new ArrayList<>();
     }
 
@@ -58,7 +58,7 @@ public class Message {
     }
 
     public List<Reply> getReplies() {
-        return new ArrayList<>(replies);
+        return replies;
     }
 
     public void setReplies(List<Reply> replies) {

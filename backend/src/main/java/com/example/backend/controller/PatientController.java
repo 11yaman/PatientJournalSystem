@@ -1,15 +1,15 @@
 package com.example.backend.controller;
 
-import com.example.backend.dto.request.MessageRequest;
-import com.example.backend.dto.response.MessageDto;
+import com.example.backend.dto.request.RegisterRequest;
 import com.example.backend.dto.response.PatientDto;
+import com.example.backend.dto.response.UserDto;
+import com.example.backend.exception.DuplicatedUserInfoException;
 import com.example.backend.exception.UserNotFoundException;
 import com.example.backend.mapping.StrategyMapper;
-import com.example.backend.model.Message;
 import com.example.backend.model.Patient;
-import com.example.backend.security.UserDetailsImpl;
-import com.example.backend.service.MessageService;
+import com.example.backend.model.User;
 import com.example.backend.service.PatientService;
+import com.example.backend.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,39 +20,58 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 
 @RestController
-@PreAuthorize("hasAuthority('PATIENT')")
-@RequestMapping("/patient")
+@RequestMapping("/api/v1/patients")
 public class PatientController {
     private final PatientService patientService;
-    private final MessageService messageService;
     private final StrategyMapper<Patient, PatientDto> patientMapper;
-    private final StrategyMapper<Message, MessageDto> messageMapper;
+    private final UserService userService;
+    private final StrategyMapper<User, UserDto> userMapper;
 
-    public PatientController(MessageService messageService, PatientService patientService, StrategyMapper<Patient, PatientDto> patientMapper, StrategyMapper<Message, MessageDto> messageMapper) {
-        this.messageService = messageService;
+    public PatientController(PatientService patientService,
+                             UserService userService,
+                             StrategyMapper<Patient, PatientDto> patientMapper,
+                             StrategyMapper<User, UserDto> userMapper) {
         this.patientService = patientService;
+        this.userService = userService;
         this.patientMapper = patientMapper;
-        this.messageMapper = messageMapper;
+        this.userMapper = userMapper;
     }
 
-    @GetMapping("/info")
-    public ResponseEntity<PatientDto> getUserInfo(Authentication authentication) {
+    @GetMapping("/{id}")
+    public ResponseEntity<PatientDto> getPatient(Authentication authentication, @PathVariable Long id) {
+        if(!userService.isEmployeeOrResourceOwner(authentication, id))
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+
         try {
-            Patient patient = patientService.getPatientByUsername(authentication.getName());
+            Patient patient;
+            if (userService.isEmployee(authentication))
+                patient = patientService.getPatientById(id);
+            else
+                patient = patientService.getPatientByUsername(authentication.getName());
             return ResponseEntity.ok(patientMapper.map(patient));
-        } catch (Exception e) {
+
+        } catch(Exception e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
         }
     }
 
-    @RequestMapping("/messages")
-    public ResponseEntity<List<MessageDto>> getUserMessages(Authentication authentication) {
+    @PostMapping("/register")
+    public ResponseEntity<UserDto> registerPatient(@RequestBody RegisterRequest registerRequest) {
         try {
-            List<Message> userMessages = messageService.getAllMessagesByPatientId(
-                    ((UserDetailsImpl) authentication.getPrincipal()).getId());
-            return ResponseEntity.ok(messageMapper.mapAll(userMessages));
-        } catch (Exception e) {
+            User user = userService.createUser(new Patient(registerRequest.username(), registerRequest.password(),
+                    registerRequest.firstName(), registerRequest.lastName()));
+            return new ResponseEntity<>(userMapper.map(user), HttpStatus.CREATED);
+        } catch (DuplicatedUserInfoException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE,
+                    String.format("Username %s already been used", registerRequest.username()));
+        } catch (UserNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
         }
+    }
+
+    @GetMapping("/list")
+    @PreAuthorize("hasAuthority('EMPLOYEE')")
+    public List<PatientDto> getAllPatients() {
+        return patientMapper.mapAll(patientService.getAllPatients());
     }
 }

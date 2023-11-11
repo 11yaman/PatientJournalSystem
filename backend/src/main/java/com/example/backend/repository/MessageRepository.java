@@ -12,7 +12,5 @@ import java.util.Optional;
 public interface MessageRepository extends CrudRepository<Message, Long> {
     List<Message> findBySender(User sender);
     List<Message> findBySenderId(Long senderId);
-    @EntityGraph(attributePaths = "replies")
-    Optional<Message> findMessageWithRepliesById(Long messageId);
     List<Message> findByStatus(Message.Status status);
 }
