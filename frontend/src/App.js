@@ -1,23 +1,13 @@
-import logo from './logo.svg';
+import React from 'react';
 import './App.css';
+import PatientPage from './PatientPage';
+import TestData from './TestData.json';
 
 function App() {
+    const user = TestData.find(patient => patient.id === 1); //Ändra detta så att den inloggade användarens ID används
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div className="App">
+          <PatientPage patient={user} />
     </div>
   );
 }
