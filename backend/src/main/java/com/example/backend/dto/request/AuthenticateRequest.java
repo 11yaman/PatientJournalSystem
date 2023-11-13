@@ -1,4 +1,4 @@
 package com.example.backend.dto.request;
 
-public record AuthenticateRequest(String username, String password) {
+public record AuthenticateRequest(String email, String password) {
 }

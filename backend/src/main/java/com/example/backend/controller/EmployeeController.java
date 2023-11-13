@@ -14,6 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+@CrossOrigin
 @RestController
 @PreAuthorize("hasAuthority('EMPLOYEE')")
 @RequestMapping("/api/v1/employees")
@@ -32,7 +33,7 @@ public class EmployeeController {
                                                   Authentication authentication) {
         try {
             User user = userService.createUser(
-                    new Employee(registerRequest.username(), registerRequest.password(),
+                    new Employee(registerRequest.email(), registerRequest.password(),
                             registerRequest.firstName(), registerRequest.lastName(),
                             Employee.Position.OTHER));
             return new ResponseEntity<>(userMapper.map(user), HttpStatus.CREATED);

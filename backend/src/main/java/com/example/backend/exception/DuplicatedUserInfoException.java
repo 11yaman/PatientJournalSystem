@@ -6,5 +6,6 @@ public class DuplicatedUserInfoException extends RuntimeException {
     }
 
     public DuplicatedUserInfoException() {
+        super();
     }
 }

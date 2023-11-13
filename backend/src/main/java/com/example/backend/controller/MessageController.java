@@ -22,6 +22,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.ArrayList;
 import java.util.List;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api/v1")
 public class MessageController {
@@ -134,7 +135,7 @@ public class MessageController {
             User replySender = r.getSender();
             replyDtos.add(new ReplyDto(r.getId(), r.getContent(), r.getDateTime(),
                     new UserDto(replySender.getId(), replySender.getUsername(),
-                            replySender.getFirstName(), replySender.getLastName())));
+                            replySender.getFirstName(), replySender.getLastName(), replySender.getRole().name())));
         }
         return replyDtos;
     }

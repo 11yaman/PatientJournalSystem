@@ -19,7 +19,8 @@ public class MessageMapper implements StrategyMapper<Message, MessageDto> {
     @Override
     public MessageDto map(Message source) {
         User sender = source.getSender();
-        UserDto senderDto = new UserDto(sender.getId(), sender.getUsername(), sender.getFirstName(), sender.getLastName());
+        UserDto senderDto = new UserDto(sender.getId(), sender.getUsername(),
+                sender.getFirstName(), sender.getLastName(), sender.getRole().name());
         return new MessageDto(source.getId(), source.getContent(), source.getDateTime(), senderDto, source.getStatus());
     }
 

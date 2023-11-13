@@ -1,6 +1,6 @@
 package com.example.backend.service.impl;
 
-import com.example.backend.exception.UserNotFoundException;
+import com.example.backend.exception.NotFoundException;
 import com.example.backend.model.Patient;
 import com.example.backend.repository.PatientRepository;
 import com.example.backend.service.PatientService;
@@ -25,11 +25,11 @@ public class PatientServiceImpl implements PatientService {
 
     @Override
     public Patient getPatientById(Long patientId) {
-        return patientRepository.findById(patientId).orElseThrow(() -> new UserNotFoundException());
+        return patientRepository.findById(patientId).orElseThrow(() -> new NotFoundException("User not found"));
     }
 
     @Override
     public Patient getPatientByUsername(String username) {
-        return patientRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException());
+        return patientRepository.findByUsername(username).orElseThrow(() -> new NotFoundException("User not found"));
     }
 }

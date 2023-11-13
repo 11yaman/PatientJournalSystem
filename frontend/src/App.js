@@ -2,13 +2,29 @@ import React from 'react';
 import './App.css';
 import PatientPage from './PatientPage';
 import TestData from './TestData.json';
+import Layout from './components/Layout';
+import {Routes as Switch, Route} from 'react-router-dom';
+import Register from './pages/Register';
+import Login from './pages/Login';
+import Home from './pages/Home';
+import { AuthContextProvider } from './context/AuthContext';
+import { ToastContextProvider } from './context/ToastContext';
 
 function App() {
-    const user = TestData.find(patient => patient.id === 1); //Ändra detta så att den inloggade användarens ID används
+    const user = TestData.find(patient => patient.id === 1); //ï¿½ndra detta sï¿½ att den inloggade anvï¿½ndarens ID anvï¿½nds
   return (
-      <div className="App">
-          <PatientPage patient={user} />
-    </div>
+    <ToastContextProvider>
+      <AuthContextProvider>
+        <Layout>
+          <Switch>
+            <Route path="/" element={<Home/>} />
+            <Route path="/login" element={<Login/>} />
+            <Route path="/register" element={<Register/>} />
+          </Switch> 
+        </Layout>
+      
+      </AuthContextProvider>
+    </ToastContextProvider>
   );
 }
 

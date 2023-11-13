@@ -1,6 +1,7 @@
 package com.example.backend.model;
 
 import jakarta.persistence.*;
+import org.springframework.lang.NonNull;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -19,7 +20,11 @@ public abstract class User {
 
     public User() {
     }
-    public User(Long id, String username, String firstName, String lastName, Role role) {
+    public User(Long id,
+                @NonNull String username,
+                @NonNull String firstName,
+                @NonNull String lastName,
+                @NonNull Role role) {
         this.id = id;
         this.username = username;
         this.firstName = firstName;
@@ -27,7 +32,12 @@ public abstract class User {
         this.role = role;
     }
 
-    public User(String username, String password, String firstName, String lastName, Role role) {
+    public User(
+            @NonNull String username,
+            @NonNull String password,
+            @NonNull String firstName,
+            @NonNull String lastName,
+            @NonNull Role role) {
         this.username = username;
         this.password = password;
         this.firstName = firstName;

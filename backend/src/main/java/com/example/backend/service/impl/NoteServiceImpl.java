@@ -1,6 +1,6 @@
 package com.example.backend.service.impl;
 
-import com.example.backend.exception.NoteNotFoundException;
+import com.example.backend.exception.NotFoundException;
 import com.example.backend.model.Note;
 import com.example.backend.repository.NoteRepository;
 import com.example.backend.service.NoteService;
@@ -20,7 +20,7 @@ public class NoteServiceImpl implements NoteService {
 
     @Override
     public Note getNoteById(Long noteId) {
-        return noteRepository.findById(noteId).orElseThrow(() -> new NoteNotFoundException(noteId));
+        return noteRepository.findById(noteId).orElseThrow(() -> new NotFoundException("Note not found: " + noteId));
     }
 
     @Override

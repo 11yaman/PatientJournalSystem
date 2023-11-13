@@ -1,10 +1,7 @@
 package com.example.backend.controller;
 
-import com.example.backend.dto.request.RegisterRequest;
 import com.example.backend.dto.response.PatientDto;
 import com.example.backend.dto.response.UserDto;
-import com.example.backend.exception.DuplicatedUserInfoException;
-import com.example.backend.exception.UserNotFoundException;
 import com.example.backend.mapping.StrategyMapper;
 import com.example.backend.model.Patient;
 import com.example.backend.model.User;
@@ -19,6 +16,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api/v1/patients")
 public class PatientController {
@@ -51,20 +49,6 @@ public class PatientController {
             return ResponseEntity.ok(patientMapper.map(patient));
 
         } catch(Exception e){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
-        }
-    }
-
-    @PostMapping("/register")
-    public ResponseEntity<UserDto> registerPatient(@RequestBody RegisterRequest registerRequest) {
-        try {
-            User user = userService.createUser(new Patient(registerRequest.username(), registerRequest.password(),
-                    registerRequest.firstName(), registerRequest.lastName()));
-            return new ResponseEntity<>(userMapper.map(user), HttpStatus.CREATED);
-        } catch (DuplicatedUserInfoException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE,
-                    String.format("Username %s already been used", registerRequest.username()));
-        } catch (UserNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
         }
     }

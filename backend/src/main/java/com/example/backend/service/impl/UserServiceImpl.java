@@ -1,7 +1,7 @@
 package com.example.backend.service.impl;
 
 import com.example.backend.exception.DuplicatedUserInfoException;
-import com.example.backend.exception.UserNotFoundException;
+import com.example.backend.exception.NotFoundException;
 import com.example.backend.model.User;
 import com.example.backend.repository.UserRepository;
 import com.example.backend.security.UserDetailsImpl;
@@ -23,20 +23,21 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserByUsername(String username) {
-        return userRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException());
+        return userRepository.findByUsername(username).orElseThrow(() -> new NotFoundException("User not found"));
     }
 
     @Override
     public User createUser(User user) {
         if (userRepository.findByUsername(user.getUsername()).isPresent())
             throw new DuplicatedUserInfoException();
+
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
     @Override
     public User getUserById(Long userId) {
-        return userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException());
+        return userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found"));
     }
 
     @Override
