@@ -36,13 +36,13 @@ export const AuthContextProvider = ({ children }) => {
 
   const checkUserLoggedIn = async () => {
     try {
-      const storedData = JSON.parse(localStorage.getItem('data'));
-      console.log("storedData: " +  JSON.stringify(storedData));
-      if (storedData) {
+      const storedUser = JSON.parse(localStorage.getItem('user'));
+      console.log("storedUser: " +  JSON.stringify(storedUser));
+      if (storedUser) {
         const res = await fetch(`${BASE_URL}/auth/info`, {
           method: "GET",
           headers: {
-            Authorization: `Basic ${storedData.authdata}`,
+            Authorization: `Basic ${storedUser.token}`,
           },
         });
         if (res.ok) {
@@ -78,8 +78,8 @@ export const AuthContextProvider = ({ children }) => {
       });
       if (res.ok) {
         const result = await res.json();
-        result.authdata = window.btoa(userData.email + ':' + userData.password);
-        localStorage.setItem("data", JSON.stringify(result));
+        result.token = window.btoa(userData.email + ':' + userData.password);
+        localStorage.setItem("user", JSON.stringify(result));
         setUser(result);
         toast.success(`Logged in ${result.firstName}`);
 
@@ -106,8 +106,8 @@ export const AuthContextProvider = ({ children }) => {
 
       if (res.ok) {
         const result = await res.json();
-        result.authdata = window.btoa(userData.email + ':' + userData.password);
-        localStorage.setItem("data", JSON.stringify(result));
+        result.token = window.btoa(userData.email + ':' + userData.password);
+        localStorage.setItem("user", JSON.stringify(result));
         setUser(result);
         toast.success("user registered successfully!");
         
@@ -127,10 +127,10 @@ export const AuthContextProvider = ({ children }) => {
       await fetch(`${BASE_URL}/auth/logout`, {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("data")}`,
+          Authorization: `Bearer ${localStorage.getItem("user")}`,
         },
       });
-      localStorage.removeItem("data");
+      localStorage.removeItem("user");
       setUser(null);
       navigate("/login");
       toast.success("Logged out successfully");
