@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import useMessageWithReplies from "../../hooks/useMessageWithReplies";
+import Spinner from '../../components/Spinner';
 
 const MessageDetails = () => {
-  const { messageId } = useParams(); // Assuming you get the messageId from the URL
+  const { messageId } = useParams(); 
 
-  const { messageWithReplies, loading } = useMessageWithReplies(messageId);
+  const { messageWithReplies, loading } = {}; //useMessagesWithReplies
   const [messageDetails, setMessageDetails] = useState([]);
 
   const mockMessageDetails = [
@@ -114,13 +115,17 @@ const MessageDetails = () => {
   return (
     <div>
       <h1>Message details</h1>
-      <div>
-        {messageDetails.map((message) => renderMessage(message))}
-        <div className="mt-3">
-          <input type="text" placeholder="Type your reply" className="form-control" />
-          <button className="btn btn-primary my-3">Reply</button>
+      {loading ? (
+        <Spinner splash="Loading Message Details..." />
+      ) : (
+        <div>
+          {messageDetails.map((message) => renderMessage(message))}
+          <div className="mt-3">
+            <input type="text" placeholder="Type your reply" className="form-control" />
+            <button className="btn btn-primary my-3">Reply</button>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

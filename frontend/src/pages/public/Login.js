@@ -1,12 +1,13 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import { Link } from 'react-router-dom'
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import AuthContext from '../context/AuthContext';
+
+import useAuth from '../../hooks/useAuth';
 
 const Login = () => {
-  const {loginUser} = useContext(AuthContext);
+  const {loginUser} = useAuth();
 
   const [credentials, setCredentials] = React.useState({
     email: '',

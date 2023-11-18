@@ -83,7 +83,7 @@ export const AuthContextProvider = ({ children }) => {
         setUser(result);
         toast.success(`Logged in ${result.firstName}`);
 
-        navigate("/", { replace: true });
+        navigate(location.state?.from?.pathname || "/", { replace: true });
       } else {
         const errorMessage = getErrorMessage(res.status);
         toast.error(errorMessage);
@@ -124,16 +124,19 @@ export const AuthContextProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      await fetch(`${BASE_URL}/auth/logout`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("user")}`,
-        },
-      });
-      localStorage.removeItem("user");
-      setUser(null);
-      navigate("/login");
-      toast.success("Logged out successfully");
+      const storedUser = JSON.parse(localStorage.getItem('user'));
+      if (storedUser) {
+        await fetch(`${BASE_URL}/auth/logout`, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${storedUser.token}`,
+          },
+        });
+        localStorage.removeItem("user");
+        setUser(null);
+        navigate("/login");
+        toast.success("Logged out successfully");
+      }
     } catch (error) {
       console.error("Error logging out:", error);
       toast.error("An error occurred");

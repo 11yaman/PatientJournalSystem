@@ -37,14 +37,14 @@ const Messages = () => {
       status: 'ACTIVE',
     },
   ];
-    
-  useEffect(() => {
-    setMessages(mockMessages); // messages 
-  }, [patientId]);
 
+  useEffect(() => {
+    setMessages(mockMessages); //messageWithReplies
+  }, [patientId]);
+    
   return (
     <div>
-      <h1>Messages for Patient ID: {patientId}</h1>
+      <h1>Messages for Patient</h1>
       <Link to="/allpatients" className="btn btn-danger my-2">
         Back to All Patients
       </Link>
