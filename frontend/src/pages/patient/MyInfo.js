@@ -37,7 +37,9 @@ const MyInfo = () => {
         </tbody>
       </table>
       <div className="mt-4">
-          <button className="btn btn-primary me-2">Notes</button>
+          <Link to={`/mynotes`} className="btn btn-info me-2">
+              Notes
+          </Link>
           <Link to={`/mymessages`} className="btn btn-info me-2">
             Messages
           </Link>

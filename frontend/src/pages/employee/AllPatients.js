@@ -73,7 +73,8 @@ const AllPatients = () => {
                         <th scope="row">{patient.firstName + " " + patient.lastName}</th>
                         <td>{patient.email}</td>
                         <td>
-                          <Link to={`/patient/${patient.id}`} className="btn btn-info my-2">
+                          <Link
+                              to={`/patient/${patient.id}`} state={ patient } className="btn btn-info my-2">
                             Profile
                           </Link>
                         </td>

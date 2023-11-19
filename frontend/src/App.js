@@ -17,6 +17,8 @@ import MyInfo from './pages/patient/MyInfo';
 import MyMessageDetails from './pages/patient/MyMessageDetails';
 import MyMessages from './pages/patient/MyMessages';
 import CreateMessage from './pages/patient/CreateMessage';
+import PatientNotes from "./pages/employee/PatientNotes";
+import MyNotes from "./pages/patient/MyNotes";
 
 function App() {
   return (
@@ -32,10 +34,11 @@ function App() {
             //Employee
             <Route element={<RequireAuth allowedRoles={"EMPLOYEE"}/>}>
               <Route path="/allpatients" element={<AllPatients />} />
-              <Route path="/patient/:id" element={<Patient />} />
+              <Route path="/patient/:id" element={<Patient />} />     //PatientInfo?
               //active messages
               <Route path="/patient/:id/messages" element={<PatientMessages />} />
               <Route path="/messages/:id" element={<MessageDetails />} />
+              <Route path="/patient/:id/notes" element={<PatientNotes />} />
               // patient Notes, en knapp "create note"
               // note details
             </Route>
@@ -46,7 +49,7 @@ function App() {
               <Route path="/mymessages" element={<MyMessages />} />
               <Route path="/mymessages/:id" element={<MessageDetails />} />
               <Route path="/mymessages/create" element={<CreateMessage />} />
-              //my Notes
+              <Route path="/mynotes" element={<MyNotes />} />
             </Route>
           </Switch> 
         </Layout>

@@ -29,7 +29,14 @@ const Navbar = ({title = "Patient Journal System"}) => {
         </button>
         <div className="collapse navbar-collapse" id="navbarColor01">
           <ul className="navbar-nav ms-auto">
-            {user ? <>       
+            {user ? <>
+              <li className="nav-item">
+                <Link to="/myinfo">
+                  <a className="nav-link">
+                    My Info
+                  </a>
+                </Link>
+              </li>
               <li className="nav-item">
                 <Link to="/allpatients">
                   <a className="nav-link">
