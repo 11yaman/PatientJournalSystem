@@ -41,6 +41,11 @@ const Navbar = ({ title = "Patient Journal System" }) => {
                 )}
                 {user.role === "EMPLOYEE" && (
                   <>
+                  <li className="nav-item">
+                      <Link to="/employee">
+                        <a className="nav-link">Employee</a>
+                      </Link>
+                    </li>
                     <li className="nav-item">
                       <Link to="/messages/active">
                         <a className="nav-link">Messages</a>

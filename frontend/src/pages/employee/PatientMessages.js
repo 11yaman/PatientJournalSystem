@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import Spinner from "../../components/Spinner";
-import usePatientMessages from "../../hooks/useMessages";
+import useMessages from "../../hooks/useMessages";
 
 const Messages = () => {
   const { patientId } = useParams();
 
-  const { patientMessages, loading } = usePatientMessages(patientId); 
+  const { patientMessages, loading } = useMessages(patientId); 
   const [messages, setMessages] = useState([]);
 
   const mockMessages = [

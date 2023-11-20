@@ -86,7 +86,7 @@ public class NoteController {
         }
     }
 
-    @RequestMapping("/list")
+    @GetMapping("/list")
     public ResponseEntity<List<NoteDto>> getPatientNotes(Authentication authentication,
                                                          @PathVariable Long patientId){
         if(!userService.isEmployeeOrResourceOwner(authentication, patientId))
@@ -101,6 +101,7 @@ public class NoteController {
                         userService.getAuthenticatedUserId(authentication));
             return ResponseEntity.ok(noteMapper.mapAll(userNotes));
         } catch (Exception e) {
+            e.printStackTrace();
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found");
         }
     }

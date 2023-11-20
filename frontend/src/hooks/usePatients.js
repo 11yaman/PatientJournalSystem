@@ -1,30 +1,36 @@
-import { useState, useEffect } from 'react';
-import { fetchAllPatients } from '../apis/PatientApi';
+import { useEffect, useState } from 'react';
+import useApi from './useApi';
+import { toast } from 'react-toastify';
+import useAuth from './useAuth';
 
 const usePatients = () => {
+  const { get, loading, error } = useApi();
   const [patients, setPatients] = useState([]);
-  const [loading, setLoading] = useState(true);
+  
+  const {user} = useAuth();
 
   useEffect(() => {
-    setLoading(true);
-    const user = JSON.parse(localStorage.getItem('user'));
+    const fetchData = async () => {
 
-    if (user !== null && user.token !== null) {
-      fetchAllPatients(user.token)
-        .then((fetchedPatients) => {
-          setPatients(fetchedPatients);
-          setLoading(false);
-        })
-        .catch((err) => {
-          console.log(err);
-          setLoading(false);
-        });
-    } else {
-      setLoading(false);
-    }
+      try{
+        if (user && user.token) {
+          const fetchedPatients = await get('/patients/list', user.token);
+
+          if (fetchedPatients) {
+            setPatients(fetchedPatients);
+          } else {
+            toast.error("Error fetching patients")
+          }
+        }
+      } catch (error) {
+        toast.error('Error fetching patients');
+      };
+    };
+
+    fetchData();
   }, []);
 
-  return { patients, loading };
+  return { patients, loading, error };
 };
 
 export default usePatients;

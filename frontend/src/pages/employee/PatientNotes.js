@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import Spinner from '../../components/Spinner';
 import useNotes from "../../hooks/useNotes";
 
-const NoteDetails = () => {
+const Notes = () => {
     const { patientId } = useParams();
 
     const { patientNotes, loading } = useNotes(patientId);
@@ -108,4 +108,4 @@ const NoteDetails = () => {
     );
 };
 
-export default NoteDetails;
+export default Notes;

@@ -2,9 +2,9 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import ToastContext from "./ToastContext";
+import useApi from "../hooks/useApi";  // Import the useApi hook
 
 const AuthContext = createContext();
-const BASE_URL = "http://localhost:8080/api/v1";
 
 export const AuthContextProvider = ({ children }) => {
   const { toast } = useContext(ToastContext);
@@ -12,6 +12,7 @@ export const AuthContextProvider = ({ children }) => {
   const location = useLocation();
 
   const [user, setUser] = useState(null);
+  const { get, post, loading, error } = useApi();  // Initialize useApi hook
 
   useEffect(() => {
     checkUserLoggedIn();
@@ -36,17 +37,12 @@ export const AuthContextProvider = ({ children }) => {
 
   const checkUserLoggedIn = async () => {
     try {
-      const storedUser = JSON.parse(localStorage.getItem('user'));
-      console.log("storedUser: " +  JSON.stringify(storedUser));
+      const storedUser = JSON.parse(localStorage.getItem("user"));
+      console.log("storedUser: " + JSON.stringify(storedUser));
       if (storedUser) {
-        const res = await fetch(`${BASE_URL}/auth/info`, {
-          method: "GET",
-          headers: {
-            Authorization: `Basic ${storedUser.token}`,
-          },
-        });
-        if (res.ok) {
-          const result = await res.json(); 
+        const result = await get("/auth/info", storedUser.token);
+
+        if (result) {
           if (
             location.pathname === "/login" ||
             location.pathname === "/register"
@@ -69,23 +65,17 @@ export const AuthContextProvider = ({ children }) => {
 
   const loginUser = async (userData) => {
     try {
-      const res = await fetch(`${BASE_URL}/auth/authenticate`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ ...userData }),
-      });
-      if (res.ok) {
-        const result = await res.json();
-        result.token = window.btoa(userData.email + ':' + userData.password);
+      const result = await post("/auth/authenticate", userData);
+
+      if (result) {
+        result.token = window.btoa(userData.email + ":" + userData.password);
         localStorage.setItem("user", JSON.stringify(result));
         setUser(result);
         toast.success(`Logged in ${result.firstName}`);
 
         navigate(location.state?.from?.pathname || "/", { replace: true });
       } else {
-        const errorMessage = getErrorMessage(res.status);
+        const errorMessage = getErrorMessage(error.status);
         toast.error(errorMessage);
       }
     } catch (err) {
@@ -96,24 +86,17 @@ export const AuthContextProvider = ({ children }) => {
 
   const registerPatient = async (userData) => {
     try {
-      const res = await fetch(`${BASE_URL}/auth/register`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ ...userData }),
-      });
+      const result = await post("/auth/register", userData);
 
-      if (res.ok) {
-        const result = await res.json();
-        result.token = window.btoa(userData.email + ':' + userData.password);
+      if (result) {
+        result.token = window.btoa(userData.email + ":" + userData.password);
         localStorage.setItem("user", JSON.stringify(result));
         setUser(result);
-        toast.success("user registered successfully!");
-        
+        toast.success("User registered successfully!");
+
         navigate("/", { replace: true });
       } else {
-        const errorMessage = getErrorMessage(res.status);
+        const errorMessage = getErrorMessage(error.status);
         toast.error(errorMessage);
       }
     } catch (err) {
@@ -124,14 +107,9 @@ export const AuthContextProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      const storedUser = JSON.parse(localStorage.getItem('user'));
+      const storedUser = JSON.parse(localStorage.getItem("user"));
       if (storedUser) {
-        await fetch(`${BASE_URL}/auth/logout`, {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${storedUser.token}`,
-          },
-        });
+        await post("/auth/logout", null, storedUser.token);
         localStorage.removeItem("user");
         setUser(null);
         navigate("/login");
@@ -144,7 +122,9 @@ export const AuthContextProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ loginUser, registerPatient, logout, user, setUser }}>
+    <AuthContext.Provider
+      value={{ loginUser, registerPatient, logout, user, setUser }}
+    >
       {children}
     </AuthContext.Provider>
   );

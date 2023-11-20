@@ -1,42 +1,42 @@
 import { useState, useEffect } from 'react';
+import useAuth from './useAuth';
+import useApi from './useApi';
+import { toast } from 'react-toastify';
 
 const useMessages = (type, patientId) => {
+  const { get, loading, error } = useApi();
   const [messages, setMessages] = useState([]);
-  const [loading, setLoading] = useState(false);
+
+  const {user} = useAuth()
 
   useEffect(() => {
     const fetchMessages = async () => {
-      setLoading(true);
+      let url;
 
+      if (type === 'all') {
+        url = '/messages/all';
+      } else if (type === 'active') {
+        url = '/messages/active';
+      } else if (type === 'archived') {
+        url = '/messages/archived';
+      } else if (type === 'patient' && patientId) {
+        url = `/patient/${patientId}/messages`;
+      } else {
+        console.error('Invalid arguments for useMessages');
+        return;
+      }
       try {
-        let url;
+        if (user && user.token ) {
+          const fetchedNotes = await get(`/patients/${patientId}/notes/list`, user.token);
 
-        // Determine the URL based on the type of messages
-        if (type === 'all') {
-          url = '/messages/all';
-        } else if (type === 'active') {
-          url = '/messages/active';
-        } else if (type === 'archived') {
-          url = '/messages/archived';
-        } else if (type === 'patient' && patientId) {
-          url = `/patient/${patientId}/messages`;
-        } else {
-          console.error('Invalid arguments for useMessages');
-          return;
+          if (fetchedNotes) {
+            setMessages(fetchedNotes);
+          } else {
+            toast.error('Error fetching patient messages');
+          }
         }
-
-        // Fetch messages based on the determined URL
-        const response = await fetch(url);
-        const data = await response.json();
-
-        // Sort messages from newest to oldest based on the dateTime property
-        const sortedMessages = data.sort((a, b) => new Date(b.dateTime) - new Date(a.dateTime));
-
-        setMessages(sortedMessages);
-      } catch (error) {
-        console.error('Error fetching messages', error);
-      } finally {
-        setLoading(false);
+      } catch (apiError) {
+        toast.error('Error fetching patient messages');
       }
     };
 

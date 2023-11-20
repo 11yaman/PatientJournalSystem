@@ -20,6 +20,7 @@ import CreateMessage from './pages/patient/CreateMessage';
 import PatientNotes from "./pages/employee/PatientNotes";
 import MyNotes from "./pages/patient/MyNotes";
 import ActiveMessages from './pages/employee/ActiveMessages';
+import CreateEmployee from './pages/employee/CreateEmployee';
 
 function App() {
   return (
@@ -39,7 +40,8 @@ function App() {
               <Route path="/patient/:id" element={<PatientInfo />} />
               <Route path="/patient/:id/messages" element={<PatientMessages />} />
               <Route path="/messages/:id" element={<MessageDetails />} />
-              <Route path="/patient/:id/notes" element={<PatientNotes />} />
+              <Route path="/patient/:patientId/notes" element={<PatientNotes />} />
+              <Route path="/employee" element={<CreateEmployee />} />
               // patient Notes, en knapp "create note"
               // note details
             </Route>

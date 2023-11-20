@@ -1,14 +1,34 @@
 import { useState, useEffect } from 'react';
 import { fetchMessageWithReplies } from '../apis/MessageApi';
+import { toast } from 'react-toastify';
+import useAuth from './useAuth';
+import useApi from './useApi';
 
 const useMessageWithReplies = (messageId) => {
+  const { get, loading, error } = useApi();
   const [message, setMessage] = useState();
-  const [loading, setLoading] = useState(true);
+
+  const {user} = useAuth()
 
   useEffect(() => {
-    // get token from localstorage and send it
-    // fetchMessageWithReplies(messageId, token)
+    const fetchData = async () => {
+      try {
 
+        if (user && user.token) {
+          const fetchedMessage = await get(`/messages/${messageId}`, user.token);
+
+          if (fetchedMessage) {
+            setMessage(fetchedMessage);
+          } else {
+            toast.error('Error fetching message with replies');
+          }
+        }
+      } catch (apiError) {
+        toast.error('Error fetching message with replies');
+      } 
+    };
+
+    fetchData();
   }, [messageId]);
 
   return { message, loading };
