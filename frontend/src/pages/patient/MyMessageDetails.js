@@ -1,93 +1,22 @@
 import { useParams } from "react-router-dom";
 import Spinner from "../../components/Spinner";
 import { useEffect, useState } from "react";
+import useAuth from '../../hooks/useAuth';
+import useMessageWithReplies from "../../hooks/useMessageWithReplies";
+import { toast } from "react-toastify";
+import useApi from "../../hooks/useApi";
 
 const MyMessageDetails = () => {
-  const { myMessageDetails, loading } = {}; //useMyMessageDetails
-  const [messageDetails, setMessageDetails] = useState({});
-
-  const mockMessageDetails = [
-    {
-      id: 1,
-      content: 'hej',
-      dateTime: '2023-11-05T17:31:52.384',
-      sender: {
-        id: 1,
-        email: 'yaman',
-        firstName: 'Yaman',
-        lastName: 'A',
-        role: 'PATIENT',
-      },
-      status: 'ACTIVE',
-      replies: [
-        {
-          id: 6,
-          content: 'reply1',
-          dateTime: '2023-11-10T22:59:01.052195',
-          sender: {
-            id: 1,
-            email: 'yaman',
-            firstName: 'Yaman',
-            lastName: 'A',
-            role: 'PATIENT',
-          },
-        },
-        {
-          id: 7,
-          content: 'reply2',
-          dateTime: '2023-11-10T23:01:29.942987',
-          sender: {
-            id: 2,
-            email: 'noor',
-            firstName: 'Noor',
-            lastName: 'A',
-            role: 'EMPLOYEE',
-          },
-        },
-        {
-          id: 7,
-          content: 'reply2',
-          dateTime: '2023-11-10T23:01:29.942987',
-          sender: {
-            id: 2,
-            email: 'noor',
-            firstName: 'Noor',
-            lastName: 'A',
-            role: 'EMPLOYEE',
-          },
-        },
-        {
-          id: 7,
-          content: 'reply2',
-          dateTime: '2023-11-10T23:01:29.942987',
-          sender: {
-            id: 2,
-            email: 'noor',
-            firstName: 'Noor',
-            lastName: 'A',
-            role: 'EMPLOYEE',
-          },
-        },
-        {
-          id: 7,
-          content: 'reply2',
-          dateTime: '2023-11-10T23:01:29.942987',
-          sender: {
-            id: 2,
-            email: 'noor',
-            firstName: 'Noor',
-            lastName: 'A',
-            role: 'EMPLOYEE',
-          },
-        },
-      ],
-    },
-  ];
+  const { messageId } = useParams(); 
+  const {message, loading} = useMessageWithReplies(messageId);
+  const {user} = useAuth();
+  
+  const [messageDetails, setMessageDetails] = useState();
 
   useEffect(() => {
-    setMessageDetails(mockMessageDetails); //messageWithReplies
-  }, []); //messageId
-
+    setMessageDetails(message); 
+  }, [messageId, message, user]); 
+  
   const renderMessage = (message) => (
     <div key={message.id} className='ml-3 bg-light p-3 rounded'>
       <p>
@@ -116,7 +45,7 @@ const MyMessageDetails = () => {
         <Spinner splash="Loading Message Details..." />
       ) : (
         <div>
-          {messageDetails.map((message) => renderMessage(message))}
+          {messageDetails && messageDetails.replies && renderMessage(messageDetails)}
           <div className="mt-3">
             <input type="text" placeholder="Type your reply" className="form-control" />
             <button className="btn btn-primary my-3">Reply</button>
@@ -126,5 +55,4 @@ const MyMessageDetails = () => {
     </div>
   );
 };
-  
 export default MyMessageDetails;

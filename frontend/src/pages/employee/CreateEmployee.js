@@ -11,7 +11,6 @@ const CreateEmployee = () => {
     const { user } = useAuth();
     const navigate = useNavigate();
 
-
     const [credentials, setCredentials] = React.useState({
         email: '',
         password: '',

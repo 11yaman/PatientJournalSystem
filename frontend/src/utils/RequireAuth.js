@@ -16,7 +16,7 @@ const RequireAuth = ({ allowedRoles }) => {
                 return <Outlet />;
             } else {
                 toast.warning('Access Denied !')
-                return <Navigate to="/home" state={{ from: location }} />;
+                return <Navigate to="/" state={{ from: location }} />;
             }
         } else {
             return <Outlet />;

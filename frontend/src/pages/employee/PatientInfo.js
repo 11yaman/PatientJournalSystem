@@ -6,14 +6,6 @@ const PatientInfo = () => {
   const location = useLocation();
   const patient = location.state;
 
-  const handleButtonClick1 = () => {
-    console.log('Show Notes');
-  };
-
-  const handleButtonClick2 = () => {
-    console.log('Show Messages');
-  };
-
   return (
     <div className="container mt-4">
       <table className="table">

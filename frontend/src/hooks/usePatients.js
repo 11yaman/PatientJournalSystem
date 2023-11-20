@@ -11,7 +11,6 @@ const usePatients = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-
       try{
         if (user && user.token) {
           const fetchedPatients = await get('/patients/list', user.token);
@@ -28,7 +27,7 @@ const usePatients = () => {
     };
 
     fetchData();
-  }, []);
+  }, [user]);
 
   return { patients, loading, error };
 };

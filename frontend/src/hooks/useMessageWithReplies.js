@@ -1,22 +1,20 @@
 import { useState, useEffect } from 'react';
-import { fetchMessageWithReplies } from '../apis/MessageApi';
 import { toast } from 'react-toastify';
 import useAuth from './useAuth';
 import useApi from './useApi';
 
 const useMessageWithReplies = (messageId) => {
   const { get, loading, error } = useApi();
-  const [message, setMessage] = useState();
+  const [message, setMessage] = useState([]);
 
-  const {user} = useAuth()
+  const {user} = useAuth();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-
         if (user && user.token) {
           const fetchedMessage = await get(`/messages/${messageId}`, user.token);
-
+          console.log("id "+ fetchedMessage.id);
           if (fetchedMessage) {
             setMessage(fetchedMessage);
           } else {
@@ -29,8 +27,8 @@ const useMessageWithReplies = (messageId) => {
     };
 
     fetchData();
-  }, [messageId]);
-
+    
+  }, [user, messageId]);
   return { message, loading };
 };
 

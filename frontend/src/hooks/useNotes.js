@@ -5,9 +5,9 @@ import { toast } from 'react-toastify';
 
 const useNotes = (patientId) => {
   const { get, loading, error } = useApi();
-  const [messages, setMessages] = useState([]);
+  const [notes, setNotes] = useState([]);
 
-  const {user} = useAuth()
+  const {user} = useAuth();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -16,7 +16,7 @@ const useNotes = (patientId) => {
           const fetchedNotes = await get(`/patients/${patientId}/notes/list`, user.token);
 
           if (fetchedNotes) {
-            setMessages(fetchedNotes);
+            setNotes(fetchedNotes);
           } else {
             toast.error('Error fetching patient notes');
           }
@@ -29,7 +29,7 @@ const useNotes = (patientId) => {
     fetchData();
   }, [patientId]);
 
-  return { messages, loading, error };
+  return { notes, loading };
 };
 
 export default useNotes;

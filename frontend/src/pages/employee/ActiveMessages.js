@@ -4,43 +4,13 @@ import Spinner from "../../components/Spinner";
 import useMessages from "../../hooks/useMessages";
 
 const ActiveMessages = () => {
-  const { activeMessages, loading } = useMessages("active"); 
+  const { messages: activeMessages, loading } = useMessages("active"); 
   const [messages, setMessages] = useState([]);
   const [searchInput, setSearchInput] = useState("");
 
-  const mockMessages = [
-    {
-      "id": 19,
-      "content": "hej",
-      "dateTime": "2023-11-05T12:31:52.384",
-      "sender": {
-          "id": 1,
-          "email": "yaman",
-          "firstName": "Yaman",
-          "lastName": "A",
-          "role": "PATIENT"
-      },
-      "status": "ACTIVE"
-  },
-  {
-      "id": 20,
-      "content": "Godmorgon hej",
-      "dateTime": "2023-11-10T22:19:11.525608",
-      "sender": {
-          "id": 6,
-          "email": "Test",
-          "firstName": "test",
-          "lastName": "t",
-          "role": "PATIENT"
-      },
-      "status": "ACTIVE"
-  }
-];
-
   useEffect(() => {
-    setMessages(mockMessages); // Replace with actual data fetch logic
-  }, []);
-
+    setMessages(activeMessages);
+  }, [activeMessages]);
   
   const handleSearchSubmit = (event) => {
     event.preventDefault();

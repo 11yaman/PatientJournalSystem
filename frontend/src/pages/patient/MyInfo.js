@@ -5,20 +5,11 @@ import { Link } from "react-router-dom";
 
 const MyInfo = () => {
   const { user } = useAuth();
-
-  const { patientInfo } = {}; // usePatientInfo(user.id)
   const [patient, setPatient] = useState(null);
 
-  const mockPatientInfo = {
-    id: 1,
-    name: "John Doe",
-    username: "Johndoe@kth.se",
-    birthDate: "1990-01-01", // Add the birth date property
-  };
-
   useEffect(() => {
-    setPatient(mockPatientInfo); // Set patient info
-  }, []); //patient
+    setPatient(user);
+  }, []); 
 
   return (
     <div className="container mt-4">
@@ -28,11 +19,11 @@ const MyInfo = () => {
           <tbody>
             <tr>
               <td>Name:</td>
-              <td>{patient.name}</td>
+              <td>{patient.firstName} {patient.lastName}</td>
             </tr>
             <tr>
               <td>Username:</td>
-              <td>{patient.username}</td>
+              <td>{patient.email}</td>
             </tr>
             <tr>
               <td>Birth Date:</td>

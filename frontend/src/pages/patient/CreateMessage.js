@@ -1,17 +1,39 @@
 import React, { useState } from "react";
+import useApi from "../../hooks/useApi";
+import { ToastContainer, toast } from 'react-toastify';
+import { useNavigate } from "react-router-dom";
+import useAuth from "../../hooks/useAuth";
 
 const CreateMessage = () => {
+  const { post, loading, error } = useApi();
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
   const [content, setContent] = useState("");
 
   const handleContentChange = (e) => {
     setContent(e.target.value);
   };
 
-  const handleSendMessage = () => {
-    // logic to send the message
+  const handleSendMessage = async () => {
+    if (!content) {
+      toast.error('Please fill in requierd field');
+      return;
+    }
+    try{
+      console.log(user.token);
+      const result = await post("/messages", {content: content}, user.token);
+      console.log(result);
 
-    console.log("Sending message:", content);
-    setContent("");
+      if (result) {
+        toast.success('Message sent successfully');
+        navigate('/mymessages');
+      } else {
+        toast.error('Error sending message');
+      }
+    } catch (err) {
+        toast.error('Error sending message')
+    }
   };
 
   return (

@@ -1,79 +1,45 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Spinner from '../../components/Spinner';
 import useNotes from "../../hooks/useNotes";
+import { toast } from 'react-toastify';
+import useApi from '../../hooks/useApi';
+import useAuth from '../../hooks/useAuth';
 
 const Notes = () => {
     const { patientId } = useParams();
+    const navigate = useNavigate();    
+    
+    const { notes : patientNotes, loading } = useNotes(patientId);
+    const {post} = useApi();
+    const {user} = useAuth();
 
-    const { patientNotes, loading } = useNotes(patientId);
     const [notes, setNotes] = useState([]);
-
-    const mockNotes = [
-        {
-            id: 1,
-            text: 'Text for note 1',
-            dateTimeCreated: '2023-11-05T17:31:52.384',
-            employee: {
-                id: 1,
-                email: 'john@example.com',
-                firstName: 'John',
-                lastName: 'Doe',
-                role: 'DOCTOR',
-            },
-            patient: {
-                id: 1,
-                name: 'Jane Doe',
-                username: 'jane@example.com',
-                age: 25,
-                diagnosis: 'Fever',
-            },
-            encounter: 1,
-        },
-        {
-            id: 2,
-            text: 'Text for note 2',
-            dateTimeCreated: '2023-11-06T09:15:00.000',
-            employee: {
-                id: 1,
-                email: 'john@example.com',
-                firstName: 'John',
-                lastName: 'Doe',
-                role: 'DOCTOR',
-            },
-            patient: {
-                id: 1,
-                name: 'Jane Doe',
-                username: 'jane@example.com',
-                age: 25,
-                diagnosis: 'Fever',
-            },
-        },
-        {
-            id: 3,
-            text: 'Text for note 3',
-            dateTimeCreated: '2023-11-08T14:45:00.000',
-            employee: {
-                id: 2,
-                email: 'emily@example.com',
-                firstName: 'Emily',
-                lastName: 'Smith',
-                role: 'OTHER',
-            },
-            patient: {
-                id: 1,
-                name: 'Jane Doe',
-                username: 'jane@example.com',
-                age: 25,
-                diagnosis: 'Fever',
-            },
-            encounter: 2
-        },
-    ];
+    const [text, setText] = useState('');
 
     useEffect(() => {
-        setNotes(mockNotes)
-    }, [patientId]);
+        setNotes(patientNotes)
+    }, [patientId, patientNotes]);
+
+    const handleCreateNote = async () => {
+        if (!text) {
+          toast.error('Please fill in requierd field');
+          return;
+        }
+        try{
+          const result = await post(`/patients/${patientId}/notes`, {text : text}, user.token);
+          console.log(result);
+    
+          if (result) {
+            toast.success('Note created successfully');
+            navigate(`/patient/${patientId}/notes`);
+          } else {
+            toast.error('Error creating note');
+          }
+        } catch (err) {
+            toast.error('Error creating note')
+        }
+      };
 
     const renderNotes = (note) => (
         <div key={note.id} className='ml-3 bg-light p-3 rounded mb-3'>
@@ -99,8 +65,15 @@ const Notes = () => {
                 <div>
                     {notes.map((note) => renderNotes(note))}
                     <div className="mt-3">
-                        <input type="text" placeholder="Type new note" className="form-control" />
-                        <button className="btn btn-primary my-3">New Note</button>
+                        <input type="text" 
+                        placeholder="Type new note" 
+                        className="form-control" 
+                        value={text}
+                        onChange={(e) => setText(e.target.value)}
+                        />
+                        <button className="btn btn-primary my-3" onClick={handleCreateNote}>
+                          New Note
+                        </button>
                     </div>
                 </div>
             )}

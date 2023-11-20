@@ -6,41 +6,12 @@ import useMessages from "../../hooks/useMessages";
 const Messages = () => {
   const { patientId } = useParams();
 
-  const { patientMessages, loading } = useMessages(patientId); 
-  const [messages, setMessages] = useState([]);
-
-  const mockMessages = [
-    {
-      id: 1,
-      content: 'I need an appointment',
-      dateTime: '2023-11-05T17:31:52.384',
-      sender: {
-        id: 1,
-        email: 'employee@example.com',
-        firstName: 'John',
-        lastName: 'Doe',
-        role: 'EMPLOYEE',
-      },
-      status: 'ACTIVE',
-    },
-    {
-      id: 2,
-      content: 'I am feeling bad',
-      dateTime: '2023-11-06T09:15:00.000',
-      sender: {
-        id: 1,
-        email: 'employee@example.com',
-        firstName: 'John',
-        lastName: 'Doe',
-        role: 'EMPLOYEE',
-      },
-      status: 'ACTIVE',
-    },
-  ];
+  const { messages, loading } = useMessages('patient', patientId); 
+  const [patientMessages, setPatientMessages] = useState([]);
 
   useEffect(() => {
-    setMessages(mockMessages); //messageWithReplies
-  }, [patientId]);
+    setPatientMessages(messages);
+  }, [patientId, messages]);
     
   return (
     <div>
@@ -53,8 +24,8 @@ const Messages = () => {
         <Spinner splash="Loading Messages..." />
       ) : (
         <div>
-          {messages.length === 0 ? (
-            <h3>No messages for this patient</h3>
+          {patientMessages.length === 0 ? (
+            <h3>No patientMessages for this patient</h3>
           ) : (
             <div>
               <table className="table table-hover">
@@ -69,7 +40,7 @@ const Messages = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {messages.map((message) => (
+                  {patientMessages.map((message) => (
                     <tr key={message.id}>
                       <td>{message.content}</td>
                       <td>{new Date(message.dateTime).toLocaleString()}</td>

@@ -2,52 +2,23 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Spinner from "../../components/Spinner";
 import useAuth from "../../hooks/useAuth";
-import usePatientMessages from "../../hooks/useMessages";
+import useMessages from "../../hooks/useMessages";
 
 const MyMessages = () => {
   const { user } = useAuth();
   
-  const { myMessages, loading } = usePatientMessages(user.id); 
+  const { messages : myMessages, loading } = useMessages('patient', user.id); 
   const [messages, setMessages] = useState([]);
 
-  const mockMessages = [
-    {
-      id: 1,
-      content: 'I need an appointment',
-      dateTime: '2023-11-05T17:31:52.384',
-      sender: {
-        id: 1,
-        email: 'employee@example.com',
-        firstName: 'John',
-        lastName: 'Doe',
-        role: 'EMPLOYEE',
-      },
-      status: 'ACTIVE',
-    },
-    {
-      id: 2,
-      content: 'I am feeling bad',
-      dateTime: '2023-11-06T09:15:00.000',
-      sender: {
-        id: 1,
-        email: 'employee@example.com',
-        firstName: 'John',
-        lastName: 'Doe',
-        role: 'EMPLOYEE',
-      },
-      status: 'ACTIVE',
-    },
-  ];
-    
   useEffect(() => {
-    setMessages(mockMessages); // messages 
-  }, []); //messages
+    setMessages(myMessages);
+  }, [myMessages]);
 
   return (
     <div>
       <h1>My messages</h1>
       <Link to="/mymessages/create" className="btn btn-success mb-3">
-        Create New Message
+        New Message
       </Link>
       <hr className="my-4" />
 

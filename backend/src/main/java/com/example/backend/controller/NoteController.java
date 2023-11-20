@@ -101,7 +101,6 @@ public class NoteController {
                         userService.getAuthenticatedUserId(authentication));
             return ResponseEntity.ok(noteMapper.mapAll(userNotes));
         } catch (Exception e) {
-            e.printStackTrace();
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found");
         }
     }

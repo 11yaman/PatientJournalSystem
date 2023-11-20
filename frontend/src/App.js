@@ -38,8 +38,8 @@ function App() {
               <Route path="/patients/all" element={<AllPatients />} />
               <Route path="/messages/active" element={<ActiveMessages />} />
               <Route path="/patient/:id" element={<PatientInfo />} />
-              <Route path="/patient/:id/messages" element={<PatientMessages />} />
-              <Route path="/messages/:id" element={<MessageDetails />} />
+              <Route path="/patient/:patientId/messages" element={<PatientMessages />} />
+              <Route path="/messages/:messageId" element={<MessageDetails />} />
               <Route path="/patient/:patientId/notes" element={<PatientNotes />} />
               <Route path="/employee" element={<CreateEmployee />} />
               // patient Notes, en knapp "create note"
@@ -50,9 +50,9 @@ function App() {
             <Route element={<RequireAuth allowedRoles={"PATIENT"}/>}>
               <Route path="/myinfo/" element={<MyInfo />} />
               <Route path="/mymessages" element={<MyMessages />} />
-              <Route path="/mymessages/:id" element={<MessageDetails />} />
+              <Route path="/mymessages/:messageId" element={<MyMessageDetails />} />
               <Route path="/mymessages/create" element={<CreateMessage />} />
-              <Route path="/mynotes" element={<MyNotes />} />
+              <Route path="/mynotes/" element={<MyNotes />} />
             </Route>
           </Switch> 
         </Layout>

@@ -2,78 +2,17 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Spinner from '../../components/Spinner';
 import useNotes from "../../hooks/useNotes";
+import useAuth from '../../hooks/useAuth';
 
 const NoteDetails = () => {
-    const { patientId } = useParams();
+    const {user} = useAuth();
 
-    const { patientNotes, loading } = useNotes(patientId);
-    const [myNotes, setMyNotes] = useState([]);
-
-    const mockNotes = [
-        {
-            id: 1,
-            text: 'Text for note 1',
-            dateTimeCreated: '2023-11-05T17:31:52.384',
-            employee: {
-                id: 1,
-                email: 'john@example.com',
-                firstName: 'John',
-                lastName: 'Doe',
-                role: 'DOCTOR',
-            },
-            patient: {
-                id: 1,
-                name: 'Jane Doe',
-                username: 'jane@example.com',
-                age: 25,
-                diagnosis: 'Fever',
-            },
-            encounter: 1,
-        },
-        {
-            id: 2,
-            text: 'Text for note 2',
-            dateTimeCreated: '2023-11-06T09:15:00.000',
-            employee: {
-                id: 1,
-                email: 'john@example.com',
-                firstName: 'John',
-                lastName: 'Doe',
-                role: 'DOCTOR',
-            },
-            patient: {
-                id: 1,
-                name: 'Jane Doe',
-                username: 'jane@example.com',
-                age: 25,
-                diagnosis: 'Fever',
-            },
-        },
-        {
-            id: 3,
-            text: 'Text for note 3',
-            dateTimeCreated: '2023-11-08T14:45:00.000',
-            employee: {
-                id: 2,
-                email: 'emily@example.com',
-                firstName: 'Emily',
-                lastName: 'Smith',
-                role: 'OTHER',
-            },
-            patient: {
-                id: 1,
-                name: 'Jane Doe',
-                username: 'jane@example.com',
-                age: 25,
-                diagnosis: 'Fever',
-            },
-            encounter: 2
-        },
-    ];
+    const { notes : myNotes, loading } = useNotes(user.id);
+    const [notes, setMyNotes] = useState([]);
 
     useEffect(() => {
-        setMyNotes(mockNotes)
-    }, [patientId]);
+        setMyNotes(myNotes)
+    }, [user, myNotes]);
 
     const renderNotes = (note) => (
         <div key={note.id} className='ml-3 bg-light p-3 rounded mb-3'>
@@ -97,7 +36,7 @@ const NoteDetails = () => {
                 <Spinner splash="Loading Note Details..." />
             ) : (
                 <div>
-                    {myNotes.map((note) => renderNotes(note))}
+                    {notes.map((note) => renderNotes(note))}
                 </div>
             )}
         </div>

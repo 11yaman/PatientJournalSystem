@@ -13,30 +13,28 @@ const useMessages = (type, patientId) => {
     const fetchMessages = async () => {
       let url;
 
-      if (type === 'all') {
-        url = '/messages/all';
-      } else if (type === 'active') {
+      if (type === 'active') {
         url = '/messages/active';
       } else if (type === 'archived') {
-        url = '/messages/archived';
+        url = ''; {/* not implemented yet */}
       } else if (type === 'patient' && patientId) {
-        url = `/patient/${patientId}/messages`;
+        url = `/patients/${patientId}/messages/list`;
       } else {
-        console.error('Invalid arguments for useMessages');
+        toast.error('An error occured')
         return;
       }
       try {
         if (user && user.token ) {
-          const fetchedNotes = await get(`/patients/${patientId}/notes/list`, user.token);
+          const fetchedMessages = await get(url, user.token);
 
-          if (fetchedNotes) {
-            setMessages(fetchedNotes);
+          if (fetchedMessages) {
+            setMessages(fetchedMessages);
           } else {
-            toast.error('Error fetching patient messages');
+            toast.error('Error fetching messages');
           }
         }
       } catch (apiError) {
-        toast.error('Error fetching patient messages');
+        toast.error('Error fetching messages');
       }
     };
 
