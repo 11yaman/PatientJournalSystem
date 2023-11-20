@@ -12,7 +12,8 @@ public class PatientMapper implements StrategyMapper<Patient, PatientDto> {
 
     @Override
     public PatientDto map(Patient source) {
-        return new PatientDto(source.getId(), source.getUsername(),source.getFirstName(),source.getLastName());
+        return new PatientDto(source.getId(), source.getUsername(),
+                source.getFirstName(), source.getLastName(), source.getBirthDate());
     }
 
     @Override

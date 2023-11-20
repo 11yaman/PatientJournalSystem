@@ -6,50 +6,56 @@ import 'react-toastify/dist/ReactToastify.css';
 import AuthContext from '../../context/AuthContext';
 
 const Register = () => {
-  const {registerPatient} = useContext(AuthContext);
+  const { registerPatient } = useContext(AuthContext);
 
   const [credentials, setCredentials] = React.useState({
     email: '',
     password: '',
     confirmPassword: '',
     firstName: '',
-    lastName: ''
+    lastName: '',
+    birthDate: '', 
   });
 
   const handleChange = (e) => {
     setCredentials({
       ...credentials,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if(!credentials.email ||
+    if (
+      !credentials.email ||
       !credentials.password ||
       !credentials.confirmPassword ||
       !credentials.firstName ||
-      !credentials.lastName) {
-      toast.error('Please fill in all fields')
+      !credentials.lastName ||
+      !credentials.birthDate // Validate birth date
+    ) {
+      toast.error('Please fill in all fields');
       return;
     }
 
-    if(credentials.confirmPassword !== credentials.password) {
-      toast.error('The passwords do not match')
-      return
+    if (credentials.confirmPassword !== credentials.password) {
+      toast.error('The passwords do not match');
+      return;
     }
 
-    const userData = {...credentials, confirmPassword: undefined}
+    const userData = { ...credentials, confirmPassword: undefined };
     registerPatient(userData);
   };
 
   return (
     <>
-      <ToastContainer autoClose={2000}/>
+      <ToastContainer autoClose={2000} />
       <form onSubmit={handleSubmit}>
         <h3>Create a patient account</h3>
         <div className="form-group">
-          <label htmlFor="firstName" className="form-label mt-4">First Name</label>
+          <label htmlFor="firstName" className="form-label mt-4">
+            First Name
+          </label>
           <input
             type="text"
             className="form-control"
@@ -62,7 +68,9 @@ const Register = () => {
           />
         </div>
         <div className="form-group">
-          <label htmlFor="lastName" className="form-label mt-4">Last Name</label>
+          <label htmlFor="lastName" className="form-label mt-4">
+            Last Name
+          </label>
           <input
             type="text"
             className="form-control"
@@ -75,7 +83,23 @@ const Register = () => {
           />
         </div>
         <div className="form-group">
-          <label htmlFor="emailInput" className="form-label mt-4">Email address</label>
+          <label htmlFor="birthDate" className="form-label mt-4">
+            Birth Date
+          </label>
+          <input
+            type="date"
+            className="form-control"
+            id="birthDate"
+            name="birthDate"
+            value={credentials.birthDate}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="emailInput" className="form-label mt-4">
+            Email address
+          </label>
           <input
             type="email"
             className="form-control"
@@ -88,7 +112,9 @@ const Register = () => {
           />
         </div>
         <div className="form-group">
-          <label htmlFor="passwordInput" className="form-label mt-4">Password</label>
+          <label htmlFor="passwordInput" className="form-label mt-4">
+            Password
+          </label>
           <input
             type="password"
             className="form-control"
@@ -101,7 +127,9 @@ const Register = () => {
           />
         </div>
         <div className="form-group">
-          <label htmlFor="confirmPassword" className="form-label mt-4">Confirm password</label>
+          <label htmlFor="confirmPassword" className="form-label mt-4">
+            Confirm password
+          </label>
           <input
             type="password"
             className="form-control"
@@ -114,7 +142,9 @@ const Register = () => {
           />
         </div>
         <input type="submit" value="Register" className="btn btn-primary my-3" />
-        <p>Already have an account? <Link to="/login">Log in</Link></p>
+        <p>
+          Already have an account? <Link to="/login">Log in</Link>
+        </p>
       </form>
     </>
   );

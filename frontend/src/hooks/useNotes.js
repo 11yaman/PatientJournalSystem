@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-const useMyNotes = (patientId) => {
+const useNotes = (patientId) => {
     const [messages, setMessages] = useState([]);
     const [loading, setLoading] = useState(false);
 
@@ -14,4 +14,4 @@ const useMyNotes = (patientId) => {
     return { messages, loading };
 };
 
-export default useMyNotes;
+export default useNotes;

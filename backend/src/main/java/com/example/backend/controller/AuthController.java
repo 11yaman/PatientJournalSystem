@@ -40,9 +40,9 @@ public class AuthController {
                 user = userService.getUserByUsername(authentication.getName());
             else if (authenticateRequest != null)
                 user = authService.authenticate(authenticateRequest.email(), authenticateRequest.password());
-            else
+            else{
                 throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Incorrect user ID or password");
-
+             }
             return new ResponseEntity<>(userMapper.map(user), HttpStatus.OK);
         } catch (NotFoundException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Incorrect user ID or password");
@@ -53,11 +53,14 @@ public class AuthController {
     public ResponseEntity<UserDto> registerPatient(@RequestBody RegisterRequest registerRequest) {
         try {
             if(registerRequest.email().isBlank() || registerRequest.password().isBlank() ||
-                    registerRequest.firstName().isBlank() || registerRequest.lastName().isBlank())
+                    registerRequest.firstName().isBlank() || registerRequest.lastName().isBlank() ||
+                    registerRequest.birthDate() == null)
                 throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Invalid input");
 
-            User user = userService.createUser(new Patient(registerRequest.email(), registerRequest.password(),
-                    registerRequest.firstName(), registerRequest.lastName()));
+            User user = userService.createUser(
+                    new Patient(registerRequest.email(), registerRequest.password(),
+                    registerRequest.firstName(), registerRequest.lastName(),  registerRequest.birthDate())
+            );
             return new ResponseEntity<>(userMapper.map(user), HttpStatus.CREATED);
         } catch (DuplicatedUserInfoException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT,

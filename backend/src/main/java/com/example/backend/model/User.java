@@ -3,6 +3,8 @@ package com.example.backend.model;
 import jakarta.persistence.*;
 import org.springframework.lang.NonNull;
 
+import java.time.LocalDate;
+
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class User {
@@ -14,6 +16,8 @@ public abstract class User {
     @Column(unique = true)
     private String username;
     private String password;
+
+    private LocalDate birthDate;
     private Role role;
 
     public enum Role {EMPLOYEE, PATIENT}
@@ -24,11 +28,13 @@ public abstract class User {
                 @NonNull String username,
                 @NonNull String firstName,
                 @NonNull String lastName,
+                @NonNull LocalDate birthDate,
                 @NonNull Role role) {
         this.id = id;
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.birthDate = birthDate;
         this.role = role;
     }
 
@@ -37,11 +43,13 @@ public abstract class User {
             @NonNull String password,
             @NonNull String firstName,
             @NonNull String lastName,
+            @NonNull LocalDate birthDate,
             @NonNull Role role) {
         this.username = username;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.birthDate = birthDate;
         this.role = role;
     }
 
@@ -83,6 +91,14 @@ public abstract class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public LocalDate getBirthDate() {
+        return birthDate;
+    }
+
+    public void setBirthDate(LocalDate birthDate) {
+        this.birthDate = birthDate;
     }
 
     public Role getRole() {

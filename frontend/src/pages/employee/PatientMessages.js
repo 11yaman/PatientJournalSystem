@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import Spinner from "../../components/Spinner";
-import usePatientMessages from "../../hooks/usePatientMessages";
+import usePatientMessages from "../../hooks/useMessages";
 
 const Messages = () => {
   const { patientId } = useParams();
@@ -45,7 +45,7 @@ const Messages = () => {
   return (
     <div>
       <h1>Messages for Patient</h1>
-      <Link to="/allpatients" className="btn btn-danger my-2">
+      <Link to="/patients/all" className="btn btn-danger my-2">
         Back to All Patients
       </Link>
       <hr className="my-4" />

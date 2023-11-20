@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import Patient from './pages/employee/PatientInfo';
+import PatientInfo from './pages/employee/PatientInfo';
 import TestData from './TestData.json';
 import Layout from './components/Layout';
 import {Routes as Switch, Route} from 'react-router-dom';
@@ -19,6 +19,7 @@ import MyMessages from './pages/patient/MyMessages';
 import CreateMessage from './pages/patient/CreateMessage';
 import PatientNotes from "./pages/employee/PatientNotes";
 import MyNotes from "./pages/patient/MyNotes";
+import ActiveMessages from './pages/employee/ActiveMessages';
 
 function App() {
   return (
@@ -33,9 +34,9 @@ function App() {
 
             //Employee
             <Route element={<RequireAuth allowedRoles={"EMPLOYEE"}/>}>
-              <Route path="/allpatients" element={<AllPatients />} />
-              <Route path="/patient/:id" element={<Patient />} />     //PatientInfo?
-              //active messages
+              <Route path="/patients/all" element={<AllPatients />} />
+              <Route path="/messages/active" element={<ActiveMessages />} />
+              <Route path="/patient/:id" element={<PatientInfo />} />
               <Route path="/patient/:id/messages" element={<PatientMessages />} />
               <Route path="/messages/:id" element={<MessageDetails />} />
               <Route path="/patient/:id/notes" element={<PatientNotes />} />

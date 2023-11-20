@@ -2,6 +2,7 @@ package com.example.backend.model;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,12 +24,12 @@ public class Patient extends User{
     public Patient() {
     }
 
-    public Patient(Long id, String username, String firstName, String lastName) {
-        super(id, username, firstName, lastName, Role.PATIENT);
+    public Patient(Long id, String username, String firstName, String lastName, LocalDate birthDate) {
+        super(id, username, firstName, lastName, birthDate, Role.PATIENT);
     }
 
-    public Patient(String username, String password, String firstName, String lastName) {
-        super(username, password, firstName, lastName, Role.PATIENT);
+    public Patient(String username, String password, String firstName, String lastName, LocalDate birthDate) {
+        super(username, password, firstName, lastName, birthDate, Role.PATIENT);
     }
 
     public List<Message> getMessages() {

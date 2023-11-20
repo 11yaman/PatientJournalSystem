@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Spinner from '../../components/Spinner';
-import useMyNotes from "../../hooks/usePatientNotes";
+import useNotes from "../../hooks/useNotes";
 
 const NoteDetails = () => {
     const { patientId } = useParams();
 
-    const { patientNotes, loading } = useMyNotes(patientId);
+    const { patientNotes, loading } = useNotes(patientId);
     const [myNotes, setMyNotes] = useState([]);
 
     const mockNotes = [

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Spinner from "../../components/Spinner";
 import useAuth from "../../hooks/useAuth";
-import usePatientMessages from "../../hooks/usePatientMessages";
+import usePatientMessages from "../../hooks/useMessages";
 
 const MyMessages = () => {
   const { user } = useAuth();

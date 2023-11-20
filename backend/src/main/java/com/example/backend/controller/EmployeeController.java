@@ -1,5 +1,6 @@
 package com.example.backend.controller;
 
+import com.example.backend.dto.request.CreateEmployeeRequest;
 import com.example.backend.dto.request.RegisterRequest;
 import com.example.backend.dto.response.UserDto;
 import com.example.backend.mapping.StrategyMapper;
@@ -29,17 +30,18 @@ public class EmployeeController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<UserDto> createEmployee(@RequestBody RegisterRequest registerRequest,
+    public ResponseEntity<UserDto> createEmployee(@RequestBody CreateEmployeeRequest createEmployeeRequest,
                                                   Authentication authentication) {
         try {
             User user = userService.createUser(
-                    new Employee(registerRequest.email(), registerRequest.password(),
-                            registerRequest.firstName(), registerRequest.lastName(),
-                            Employee.Position.OTHER));
+                    new Employee(createEmployeeRequest.email(), createEmployeeRequest.password(),
+                            createEmployeeRequest.firstName(), createEmployeeRequest.lastName(),
+                            createEmployeeRequest.birthDate(),
+                            Employee.Position.valueOf(createEmployeeRequest.position()))
+            );
             return new ResponseEntity<>(userMapper.map(user), HttpStatus.CREATED);
 
         } catch (Exception e){
-            e.printStackTrace();
             throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "User could not be created");
         }
     }

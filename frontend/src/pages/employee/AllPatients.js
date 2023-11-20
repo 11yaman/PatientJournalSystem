@@ -29,7 +29,7 @@ const AllPatients = () => {
     <>
       <div>
         <h1>All Patients</h1>
-        <a href="/allpatients" className="btn btn-danger my-2">
+        <a href="/patients/all" className="btn btn-danger my-2">
           Reload Patient List
         </a>
         <hr className="my-4" />
@@ -41,13 +41,13 @@ const AllPatients = () => {
               <h3>No patients found</h3>
             ) : (
               <>
-                <form className="d-flex" onSubmit={handleSearchSubmit}>
+                <form className="d-flex mb-3" onSubmit={handleSearchSubmit}>
                   <input
                     type="text"
                     name="searchInput"
                     id="searchInput"
                     className="form-control my-2"
-                    placeholder="Search Patient"
+                    placeholder="Search Patient By Name"
                     value={searchInput}
                     onChange={(e) => setSearchInput(e.target.value)}
                   />
@@ -59,6 +59,7 @@ const AllPatients = () => {
                 <p>
                   Total Patients: <strong>{allPatients.length}</strong>
                 </p>
+
                 <table className="table table-hover">
                   <thead>
                     <tr className="table-dark">

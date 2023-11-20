@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useLocation, useParams } from 'react-router-dom';
 
-const Patient = () => {
+const PatientInfo = () => {
   const { id } = useParams();
   const location = useLocation();
   const patient = location.state;
@@ -26,18 +26,22 @@ const Patient = () => {
             <td>Username:</td>
             <td>{patient.email}</td>
           </tr>
+          <tr>
+            <td>Birth Date:</td>
+            <td>{patient.birthDate}</td>
+          </tr>
         </tbody>
       </table>
       <div className="mt-4">
-          <Link to={`/patient/${id}/notes`} className="btn btn-info me-2">
-              Notes
-          </Link>
-          <Link to={`/patient/${id}/messages`} className="btn btn-info me-2">
-            Messages
-          </Link>
+        <Link to={`/patient/${id}/notes`} className="btn btn-info me-2">
+          Notes
+        </Link>
+        <Link to={`/patient/${id}/messages`} className="btn btn-info me-2">
+          Messages
+        </Link>
       </div>
     </div>
   );
 };
 
-export default Patient;
+export default PatientInfo;

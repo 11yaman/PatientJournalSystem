@@ -134,8 +134,12 @@ public class MessageController {
         for (Reply r: replies) {
             User replySender = r.getSender();
             replyDtos.add(new ReplyDto(r.getId(), r.getContent(), r.getDateTime(),
-                    new UserDto(replySender.getId(), replySender.getUsername(),
-                            replySender.getFirstName(), replySender.getLastName(), replySender.getRole().name())));
+                            new UserDto(replySender.getId(), replySender.getUsername(),
+                                    replySender.getFirstName(), replySender.getLastName(),
+                                    replySender.getBirthDate(),
+                                    replySender.getRole().name())
+                            )
+            );
         }
         return replyDtos;
     }

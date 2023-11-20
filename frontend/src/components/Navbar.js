@@ -2,8 +2,8 @@ import {Link} from 'react-router-dom';
 import AuthContext from '../context/AuthContext';
 import { useContext } from 'react';
 
-const Navbar = ({title = "Patient Journal System"}) => {
-  const {user, logout} = useContext(AuthContext);
+const Navbar = ({ title = "Patient Journal System" }) => {
+  const { user, logout } = useContext(AuthContext);
 
   const handleLogout = () => {
     logout();
@@ -17,59 +17,65 @@ const Navbar = ({title = "Patient Journal System"}) => {
             {title}
           </a>
         </Link>
-        <button 
-          className="navbar-toggler" 
-          type="button" 
-          data-bs-toggle="collapse" 
-          data-bs-target="#navbarColor01" 
-          aria-controls="navbarColor01" 
-          aria-expanded="false" 
-          aria-label="Toggle navigation">
+        <button
+          className="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarColor01"
+          aria-controls="navbarColor01"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
           <span className="navbar-toggler-icon"></span>
         </button>
         <div className="collapse navbar-collapse" id="navbarColor01">
           <ul className="navbar-nav ms-auto">
-            {user ? <>
-              <li className="nav-item">
-                <Link to="/myinfo">
-                  <a className="nav-link">
-                    My Info
-                  </a>
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link to="/allpatients">
-                  <a className="nav-link">
-                    All patients
-                  </a>
-                </Link>
-              </li>
-              <li className="nav-item" onClick={handleLogout}>
-                <button className="btn btn-danger">
-                  Log out
-                </button>   
-              </li>               
-            </> : <>
-              <li className="nav-item">
-                <Link to="/login">
-                  <a className="nav-link">
-                    Login
-                  </a>
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link to="/register">
-                  <a className="nav-link">
-                    Register
-                  </a>
-                </Link>
-              </li>
-            </>}
-            </ul>
+            {user ? (
+              <>
+                {user.role === "PATIENT" && (
+                  <li className="nav-item">
+                    <Link to="/myinfo">
+                      <a className="nav-link">My Info</a>
+                    </Link>
+                  </li>
+                )}
+                {user.role === "EMPLOYEE" && (
+                  <>
+                    <li className="nav-item">
+                      <Link to="/messages/active">
+                        <a className="nav-link">Messages</a>
+                      </Link>
+                    </li>
+                    <li className="nav-item">
+                      <Link to="/patients/all">
+                        <a className="nav-link">All patients</a>
+                      </Link>
+                    </li>
+                  </>
+                )}
+                <li className="nav-item" onClick={handleLogout}>
+                  <button className="btn btn-danger">Log out</button>
+                </li>
+              </>
+            ) : (
+              <>
+                <li className="nav-item">
+                  <Link to="/login">
+                    <a className="nav-link">Login</a>
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link to="/register">
+                    <a className="nav-link">Register</a>
+                  </Link>
+                </li>
+              </>
+            )}
+          </ul>
         </div>
       </div>
     </nav>
   );
-}
+};
 
 export default Navbar;

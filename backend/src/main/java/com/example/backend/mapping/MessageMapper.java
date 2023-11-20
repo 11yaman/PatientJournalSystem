@@ -20,7 +20,7 @@ public class MessageMapper implements StrategyMapper<Message, MessageDto> {
     public MessageDto map(Message source) {
         User sender = source.getSender();
         UserDto senderDto = new UserDto(sender.getId(), sender.getUsername(),
-                sender.getFirstName(), sender.getLastName(), sender.getRole().name());
+                sender.getFirstName(), sender.getLastName(), sender.getBirthDate(), sender.getRole().name());
         return new MessageDto(source.getId(), source.getContent(), source.getDateTime(), senderDto, source.getStatus());
     }
 
