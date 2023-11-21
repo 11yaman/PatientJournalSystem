@@ -32,6 +32,7 @@ const Notes = () => {
     
           if (result) {
             toast.success('Note created successfully');
+            setText("");
             navigate(`/patient/${patientId}/notes`);
           } else {
             toast.error('Error creating note');

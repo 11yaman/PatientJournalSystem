@@ -1,17 +1,46 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import useMessageWithReplies from "../../hooks/useMessageWithReplies";
 import Spinner from '../../components/Spinner';
+import { toast } from 'react-toastify';
+import useApi from '../../hooks/useApi';
+import useAuth from '../../hooks/useAuth';
 
 const MessageDetails = () => {
   const { messageId } = useParams(); 
+  const navigate = useNavigate();    
+  const {post} = useApi();
+  const {user} = useAuth();
 
   const { message, loading } = useMessageWithReplies(messageId);
   const [messageDetails, setMessageDetails] = useState([]);
 
+  const [content, setContent] = useState('');
+
   useEffect(() => {
-    setMessageDetails(message); //messageWithReplies
+    setMessageDetails(message);
   }, [messageId, message]);
+
+  const handleReply = async () => {
+    if (!content) {
+      toast.error('Please fill in requierd field');
+      return;
+    }
+    try{
+      const result = await post(`/messages/${messageId}/reply`, {content : content}, user.token);
+      console.log(result);
+
+      if (result) {
+        toast.success('Note created successfully');
+        setContent("");
+        navigate(`/messages/${messageId}`);
+      } else {
+        toast.error('Error creating note');
+      }
+    } catch (err) {
+        toast.error('Error creating note')
+    }
+  };
 
   const renderMessage = (message) => (
     <div key={message.id} className='ml-3 bg-light p-3 rounded'>
@@ -43,8 +72,9 @@ const MessageDetails = () => {
         <div>
           {messageDetails && messageDetails.replies && renderMessage(messageDetails)}
           <div className="mt-3">
-            <input type="text" placeholder="Type your reply" className="form-control" />
-            <button className="btn btn-primary my-3">Reply</button>
+            <input type="text" placeholder="Type your reply" className="form-control" value={content} 
+            onChange={(e) => setContent(e.target.value)} />
+            <button className="btn btn-primary my-3" onClick={handleReply}>Reply</button>
           </div>
         </div>
       )}

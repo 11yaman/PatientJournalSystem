@@ -32,7 +32,7 @@ const Register = () => {
       !credentials.confirmPassword ||
       !credentials.firstName ||
       !credentials.lastName ||
-      !credentials.birthDate // Validate birth date
+      !credentials.birthDate
     ) {
       toast.error('Please fill in all fields');
       return;

@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Spinner from "../../components/Spinner";
 import { useEffect, useState } from "react";
 import useAuth from '../../hooks/useAuth';
@@ -8,14 +8,38 @@ import useApi from "../../hooks/useApi";
 
 const MyMessageDetails = () => {
   const { messageId } = useParams(); 
+  const navigate = useNavigate();    
   const {message, loading} = useMessageWithReplies(messageId);
   const {user} = useAuth();
-  
+  const {post} = useApi();
+
+  const [content, setContent] = useState('');
   const [messageDetails, setMessageDetails] = useState();
 
   useEffect(() => {
     setMessageDetails(message); 
   }, [messageId, message, user]); 
+
+  const handleReply = async () => {
+    if (!content) {
+      toast.error('Please fill in requierd field');
+      return;
+    }
+    try{
+      const result = await post(`/messages/${messageId}/reply`, {content : content}, user.token);
+      console.log(result);
+
+      if (result) {
+        toast.success('Note created successfully');
+        setContent("");
+        navigate(`/mymessages/${messageId}`);
+      } else {
+        toast.error('Error creating note');
+      }
+    } catch (err) {
+        toast.error('Error creating note')
+    }
+  };
   
   const renderMessage = (message) => (
     <div key={message.id} className='ml-3 bg-light p-3 rounded'>
@@ -47,8 +71,9 @@ const MyMessageDetails = () => {
         <div>
           {messageDetails && messageDetails.replies && renderMessage(messageDetails)}
           <div className="mt-3">
-            <input type="text" placeholder="Type your reply" className="form-control" />
-            <button className="btn btn-primary my-3">Reply</button>
+          <input type="text" placeholder="Type your reply" className="form-control" value={content} 
+            onChange={(e) => setContent(e.target.value)} />            
+            <button className="btn btn-primary my-3" onClick={handleReply}>Reply</button>
           </div>
         </div>
       )}
