@@ -1,9 +1,7 @@
 package com.example.backend.service.impl;
 
 import com.example.backend.model.Message;
-import com.example.backend.model.Patient;
 import com.example.backend.model.Reply;
-import com.example.backend.model.User;
 import com.example.backend.repository.MessageRepository;
 import com.example.backend.repository.ReplyRepository;
 import com.example.backend.service.MessageService;
@@ -46,11 +44,11 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public List<Message> getAllMessagesByPatient(Long patientId) {
-        return messageRepository.findBySenderId(patientId);
+        return messageRepository.findBySenderIdOrderByDateTimeDesc(patientId);
     }
     @Override
     public List<Message> getActiveMessagesForEmployees() {
-        return messageRepository.findByStatus(Message.Status.ACTIVE);
+        return messageRepository.findByStatusOrderByDateTimeDesc(Message.Status.ACTIVE);
     }
 
 }

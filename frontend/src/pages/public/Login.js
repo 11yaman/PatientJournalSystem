@@ -37,8 +37,8 @@ const Login = () => {
     <ToastContainer autoClose={2000}/>
       <form onSubmit={handleSubmit}>
           <h3>Login</h3>
-          <div class="form-group">
-              <label htmlFor="emailInput" class="form-label mt-4">Email address</label>
+          <div className="form-group">
+              <label htmlFor="emailInput" className="form-label mt-4">Email address</label>
               <input 
                 type="username" // edit later to email
                 className="form-control" 
@@ -50,8 +50,8 @@ const Login = () => {
                 required
               />
           </div>
-          <div class="form-group">
-              <label htmlFor="passwordInput" class="form-label mt-4">Password</label>
+          <div className="form-group">
+              <label htmlFor="passwordInput" className="form-label mt-4">Password</label>
               <input 
                 type="password" 
                 className="form-control" 

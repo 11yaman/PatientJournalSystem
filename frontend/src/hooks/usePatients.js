@@ -14,7 +14,6 @@ const usePatients = () => {
       try{
         if (user && user.token) {
           const fetchedPatients = await get('/patients/list', user.token);
-
           if (fetchedPatients) {
             setPatients(fetchedPatients);
           } else {

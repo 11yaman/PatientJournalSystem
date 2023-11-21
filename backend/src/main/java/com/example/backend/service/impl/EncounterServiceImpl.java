@@ -6,6 +6,9 @@ import com.example.backend.service.EncounterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * Not Implemented yet
+ */
 @Service
 public class EncounterServiceImpl implements EncounterService {
     private final EncounterRepository encounterRepository;

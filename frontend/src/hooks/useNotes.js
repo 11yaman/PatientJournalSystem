@@ -27,7 +27,7 @@ const useNotes = (patientId) => {
     };
 
     fetchData();
-  }, [patientId]);
+  }, [patientId, user]);
 
   return { notes, loading };
 };

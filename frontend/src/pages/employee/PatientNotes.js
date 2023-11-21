@@ -27,12 +27,12 @@ const Notes = () => {
           return;
         }
         try{
-          const result = await post(`/patients/${patientId}/notes`, {text : text}, user.token);
-          console.log(result);
-    
+          const result = await post(`/patients/${patientId}/notes`, {text : text}, user.token);    
           if (result) {
             toast.success('Note created successfully');
             setText("");
+            
+            setNotes((prevNotes) => [...prevNotes, result]);
             navigate(`/patient/${patientId}/notes`);
           } else {
             toast.error('Error creating note');
@@ -60,22 +60,22 @@ const Notes = () => {
     return (
         <div>
             <h1>Notes for patient</h1>
+            <div className="mt-3">
+                <input type="text" 
+                placeholder="Type new note" 
+                className="form-control" 
+                value={text}
+                onChange={(e) => setText(e.target.value)}
+                />
+                <button className="btn btn-primary my-3" onClick={handleCreateNote}>
+                    New Note
+                </button>
+            </div>
             {loading ? (
                 <Spinner splash="Loading Note Details..." />
             ) : (
                 <div>
                     {notes.map((note) => renderNotes(note))}
-                    <div className="mt-3">
-                        <input type="text" 
-                        placeholder="Type new note" 
-                        className="form-control" 
-                        value={text}
-                        onChange={(e) => setText(e.target.value)}
-                        />
-                        <button className="btn btn-primary my-3" onClick={handleCreateNote}>
-                          New Note
-                        </button>
-                    </div>
                 </div>
             )}
         </div>

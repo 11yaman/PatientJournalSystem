@@ -14,7 +14,6 @@ const useMessageWithReplies = (messageId) => {
       try {
         if (user && user.token) {
           const fetchedMessage = await get(`/messages/${messageId}`, user.token);
-          console.log("id "+ fetchedMessage.id);
           if (fetchedMessage) {
             setMessage(fetchedMessage);
           } else {

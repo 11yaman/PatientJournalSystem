@@ -50,7 +50,6 @@ const CreateEmployee = () => {
         try{
             const userData = { ...credentials, confirmPassword: undefined };
             const result = await post("/employees/create", userData, user.token);
-            console.log(result);
 
             if (result) {
                 toast.success('New employee created');

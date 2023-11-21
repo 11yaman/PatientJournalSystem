@@ -12,10 +12,8 @@ const Navbar = ({ title = "Patient Journal System" }) => {
   return (
     <nav className="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
       <div className="container-fluid">
-        <Link to="/">
-          <a className="navbar-brand" href="#">
-            {title}
-          </a>
+        <Link to="/" className="navbar-brand">
+          {title}
         </Link>
         <button
           className="navbar-toggler"
@@ -34,26 +32,26 @@ const Navbar = ({ title = "Patient Journal System" }) => {
               <>
                 {user.role === "PATIENT" && (
                   <li className="nav-item">
-                    <Link to="/myinfo">
-                      <a className="nav-link">My Info</a>
+                    <Link to="/myinfo" className="nav-link">
+                      My Info
                     </Link>
                   </li>
                 )}
                 {user.role === "EMPLOYEE" && (
                   <>
                   <li className="nav-item">
-                      <Link to="/employee">
-                        <a className="nav-link">Employee</a>
+                      <Link to="/employee" className="nav-link">
+                        Employee
                       </Link>
                     </li>
                     <li className="nav-item">
-                      <Link to="/messages/active">
-                        <a className="nav-link">Messages</a>
+                      <Link to="/messages/active" className="nav-link">
+                        Messages
                       </Link>
                     </li>
                     <li className="nav-item">
-                      <Link to="/patients/all">
-                        <a className="nav-link">All patients</a>
+                      <Link to="/patients/all" className="nav-link">
+                        All patients
                       </Link>
                     </li>
                   </>
@@ -65,13 +63,13 @@ const Navbar = ({ title = "Patient Journal System" }) => {
             ) : (
               <>
                 <li className="nav-item">
-                  <Link to="/login">
-                    <a className="nav-link">Login</a>
+                  <Link to="/login" className="nav-link">
+                    Login
                   </Link>
                 </li>
                 <li className="nav-item">
-                  <Link to="/register">
-                    <a className="nav-link">Register</a>
+                  <Link to="/register" className="nav-link">
+                    Register
                   </Link>
                 </li>
               </>

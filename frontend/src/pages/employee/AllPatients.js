@@ -1,14 +1,13 @@
 import React, { useContext, useEffect, useState } from "react";
-//import { Modal } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import Spinner from "../../components/Spinner";
 import ToastContext from "../../context/ToastContext";
 import usePatients from "../../hooks/usePatients";
+import useAuth from "../../hooks/useAuth";
 
 const AllPatients = () => {
   const { patients, loading } = usePatients([]);
   const [allPatients, setAllPatients] = useState(patients);
-
   const [searchInput, setSearchInput] = useState("");
 
   useEffect(() => {
@@ -69,13 +68,12 @@ const AllPatients = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {allPatients.map((patient) => ( // Display 'allPatients' instead of 'patients'
-                      <tr key={patient._id}>
+                    {allPatients.map((patient) => (
+                      <tr key={patient.id}>
                         <th scope="row">{patient.firstName + " " + patient.lastName}</th>
                         <td>{patient.email}</td>
                         <td>
-                          <Link
-                              to={`/patient/${patient.id}`} state={ patient } className="btn btn-info my-2">
+                          <Link to={`/patient/${patient.id}`} state={patient} className="btn btn-info my-2">
                             Profile
                           </Link>
                         </td>

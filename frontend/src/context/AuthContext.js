@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import ToastContext from "./ToastContext";
-import useApi from "../hooks/useApi";  // Import the useApi hook
+import useApi from "../hooks/useApi"; 
 
 const AuthContext = createContext();
 
@@ -12,7 +12,7 @@ export const AuthContextProvider = ({ children }) => {
   const location = useLocation();
 
   const [user, setUser] = useState(null);
-  const { get, post, loading, error } = useApi();  // Initialize useApi hook
+  const { get, post, loading, error } = useApi();  
 
   useEffect(() => {
     checkUserLoggedIn();
@@ -38,7 +38,6 @@ export const AuthContextProvider = ({ children }) => {
   const checkUserLoggedIn = async () => {
     try {
       const storedUser = JSON.parse(localStorage.getItem("user"));
-      console.log("storedUser: " + JSON.stringify(storedUser));
       if (storedUser) {
         const result = await get("/auth/info", storedUser.token);
 
@@ -53,6 +52,7 @@ export const AuthContextProvider = ({ children }) => {
           } else {
             navigate(location.pathname ? location.pathname : "/");
           }
+          result.token = storedUser.token;
           setUser(result);
         } else {
           navigate("/login", { replace: true });

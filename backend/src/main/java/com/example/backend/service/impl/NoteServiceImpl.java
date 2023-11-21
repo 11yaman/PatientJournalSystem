@@ -30,6 +30,6 @@ public class NoteServiceImpl implements NoteService {
 
     @Override
     public List<Note> getAllNotesForPatient(Long patientId) {
-        return noteRepository.findAllByPatientId(patientId);
+        return noteRepository.findByPatientIdOrderByDateTimeCreatedDesc(patientId);
     }
 }
