@@ -14,7 +14,7 @@ const MyMessageDetails = () => {
   const {post} = useApi();
 
   const [content, setContent] = useState('');
-  const [messageDetails, setMessageDetails] = useState();
+  const [messageDetails, setMessageDetails] = useState([]);
 
   useEffect(() => {
     setMessageDetails(message); 
@@ -30,14 +30,17 @@ const MyMessageDetails = () => {
       console.log(result);
 
       if (result) {
-        toast.success('Note created successfully');
+        toast.success('Reply sent successfully');
         setContent("");
+        console.log(result);
+
+        setMessageDetails(result);   
         navigate(`/mymessages/${messageId}`);
       } else {
-        toast.error('Error creating note');
+        toast.error('Error sending reply');
       }
     } catch (err) {
-        toast.error('Error creating note')
+        toast.error('Error sending reply')
     }
   };
   

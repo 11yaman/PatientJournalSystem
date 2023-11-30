@@ -171,7 +171,7 @@ const CreateEmployee = () => {
                         <option value="DOCTOR">Doctor</option>
                     </select>
                 </div>
-                <input type="submit" value="Register" className="btn btn-primary my-3" />
+                <input type="submit" value="Create" className="btn btn-primary my-3" />
             </form>
         </>
     );

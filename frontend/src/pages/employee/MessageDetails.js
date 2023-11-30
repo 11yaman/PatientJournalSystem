@@ -31,14 +31,16 @@ const MessageDetails = () => {
       console.log(result);
 
       if (result) {
-        toast.success('Note created successfully');
+        toast.success('Reply sent successfully');
         setContent("");
+
+        setMessageDetails(result);     
         navigate(`/messages/${messageId}`);
       } else {
-        toast.error('Error creating note');
+        toast.error('Error sending reply');
       }
     } catch (err) {
-        toast.error('Error creating note')
+        toast.error('Error sending reply')
     }
   };
 
